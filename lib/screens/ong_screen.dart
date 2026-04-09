@@ -140,7 +140,10 @@ class _OngScreenState extends State<OngScreen> {
                     children: [
                       _buildActionIcon(Icons.group_outlined),
                       const SizedBox(width: 10),
-                      _buildActionIcon(Icons.location_on_outlined),
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/map'),
+                        child: _buildActionIcon(Icons.location_on_outlined),
+                      ),
                       const SizedBox(width: 10),
                       _buildActionIcon(Icons.chat_bubble_outline),
                     ],
@@ -484,6 +487,7 @@ class _OngScreenState extends State<OngScreen> {
             onTap: () {
               setState(() => _selectedIndex = i);
               if (i == 0) Navigator.pushReplacementNamed(context, '/home');
+              if (i == 2) Navigator.pushReplacementNamed(context, '/chats-list');
             },
             child: Container(
               padding: const EdgeInsets.all(10),
