@@ -66,6 +66,7 @@ class _StyleSelectorScreenState extends State<StyleSelectorScreen>
   Future<void> _onContinue() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('style_selected', true);
+    await prefs.setStringList('saved_styles', _selectedStyles.toList());
     if (mounted) Navigator.pushReplacementNamed(context, '/home');
   }
 
