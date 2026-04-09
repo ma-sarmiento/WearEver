@@ -132,12 +132,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         color: Color(0xFFB5976A), size: 18),
                   ),
                   const SizedBox(width: 8),
-                  const Text(
-                    'Atelier Nova',
-                    style: TextStyle(
-                      color: Color(0xFF4A3F30),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/seller-profile'),
+                    child: const Text(
+                      'Atelier Nova',
+                      style: TextStyle(
+                        color: Color(0xFF4A3F30),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                   const Spacer(),
@@ -524,7 +527,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ],
         ),
         child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, '/cart'),
+          onPressed: () => Navigator.pushNamed(context, '/chat'),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFB5976A),
             foregroundColor: Colors.white,
