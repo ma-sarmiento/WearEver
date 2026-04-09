@@ -354,6 +354,7 @@ class _SavedScreenState extends State<SavedScreen> {
               setState(() => _selectedIndex = i);
               if (i == 0) Navigator.pushReplacementNamed(context, '/home');
               if (i == 1) Navigator.pushReplacementNamed(context, '/explore');
+              if (i == 2) Navigator.pushReplacementNamed(context, '/chats-list');
             },
             child: Container(
               padding: const EdgeInsets.all(10),

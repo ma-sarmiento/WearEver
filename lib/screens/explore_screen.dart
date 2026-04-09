@@ -405,6 +405,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
             onTap: () {
               setState(() => _selectedIndex = i);
               if (i == 0) Navigator.pushReplacementNamed(context, '/home');
+              if (i == 2) Navigator.pushReplacementNamed(context, '/chats-list');
               if (i == 3) Navigator.pushReplacementNamed(context, '/saved');
             },
             child: Container(
