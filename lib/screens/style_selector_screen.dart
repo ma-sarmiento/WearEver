@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StyleSelectorScreen extends StatefulWidget {
   const StyleSelectorScreen({super.key});
@@ -46,14 +47,26 @@ class _StyleSelectorScreenState extends State<StyleSelectorScreen>
     super.dispose();
   }
 
+  bool _showMaxError = false;
+
   void _toggleStyle(String style) {
     setState(() {
       if (_selectedStyles.contains(style)) {
         _selectedStyles.remove(style);
+        _showMaxError = false;
+      } else if (_selectedStyles.length >= 3) {
+        _showMaxError = true;
       } else {
         _selectedStyles.add(style);
+        _showMaxError = false;
       }
     });
+  }
+
+  Future<void> _onContinue() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('style_selected', true);
+    if (mounted) Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
@@ -85,6 +98,15 @@ class _StyleSelectorScreenState extends State<StyleSelectorScreen>
                     color: Color(0xFFB5976A),
                   ),
                 ),
+                const SizedBox(height: 4),
+                Text(
+                  'Selecciona hasta 3 estilos',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: _showMaxError ? const Color(0xFFD32F2F) : const Color(0xFF9A8A75),
+                    fontWeight: _showMaxError ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
                 const SizedBox(height: 32),
                 Expanded(
                   child: GridView.builder(
@@ -113,11 +135,7 @@ class _StyleSelectorScreenState extends State<StyleSelectorScreen>
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton(
-                    onPressed: _selectedStyles.isEmpty
-                        ? null
-                        : () {
-                      Navigator.pushReplacementNamed(context, '/home');
-                    },
+                    onPressed: _selectedStyles.isEmpty ? null : _onContinue,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFB5976A),
                       disabledBackgroundColor:
