@@ -10,6 +10,10 @@ import 'screens/map_screen.dart';
 import 'screens/explore_screen.dart';
 import 'screens/saved_screen.dart';
 import 'screens/product_detail_screen.dart';
+import 'screens/cart_screen.dart';
+import 'screens/checkout_step1_screen.dart';
+import 'screens/checkout_step2_screen.dart';
+import 'screens/checkout_step3_screen.dart';
 
 void main() {
   runApp(const RevisteApp());
@@ -45,6 +49,10 @@ class RevisteApp extends StatelessWidget {
         '/explore': (context) => const ExploreScreen(),
         '/saved': (context) => const SavedScreen(),
         '/product-detail': (context) => const ProductDetailScreen(),
+        '/cart': (context) => const CartScreen(),
+        '/checkout-1': (context) => const CheckoutStep1Screen(),
+        '/checkout-2': (context) => const CheckoutStep2Screen(),
+        '/checkout-3': (context) => const CheckoutStep3Screen(),
       },
     );
   }
