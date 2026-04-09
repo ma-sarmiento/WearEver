@@ -346,31 +346,7 @@ class CheckoutStep3Screen extends StatelessWidget {
       width: double.infinity,
       height: 52,
       child: ElevatedButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16)),
-              title: const Text('¡Pedido confirmado!',
-                  style: TextStyle(color: Color(0xFF4A3F30))),
-              content: const Text(
-                'Tu pedido ha sido procesado exitosamente. Te notificaremos cuando sea enviado.',
-                style: TextStyle(color: Color(0xFF7A6A55)),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    Navigator.pushReplacementNamed(context, '/home');
-                  },
-                  child: const Text('Ir al inicio',
-                      style: TextStyle(color: Color(0xFFB5976A))),
-                ),
-              ],
-            ),
-          );
-        },
+        onPressed: () => Navigator.pushReplacementNamed(context, '/order-confirmed'),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFB5976A),
           foregroundColor: Colors.white,
@@ -411,8 +387,8 @@ class CheckoutStep3Screen extends StatelessWidget {
           items.length,
               (i) => GestureDetector(
             onTap: () {
-              if (i == 0)
-                Navigator.pushReplacementNamed(context, '/home');
+              if (i == 0) Navigator.pushReplacementNamed(context, '/home');
+              if (i == 2) Navigator.pushReplacementNamed(context, '/chats-list');
             },
             child: Icon(items[i],
                 color: const Color(0xFF9A8A75), size: 24),

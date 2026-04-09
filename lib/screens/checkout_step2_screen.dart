@@ -367,8 +367,8 @@ class _CheckoutStep2ScreenState extends State<CheckoutStep2Screen> {
           items.length,
               (i) => GestureDetector(
             onTap: () {
-              if (i == 0)
-                Navigator.pushReplacementNamed(context, '/home');
+              if (i == 0) Navigator.pushReplacementNamed(context, '/home');
+              if (i == 2) Navigator.pushReplacementNamed(context, '/chats-list');
             },
             child: Icon(items[i],
                 color: const Color(0xFF9A8A75), size: 24),
