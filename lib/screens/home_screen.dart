@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             IconButton(
               icon: const Icon(Icons.shopping_cart_outlined,
                   color: Color(0xFF4A3F30)),
-              onPressed: () {},
+              onPressed: () => Navigator.pushNamed(context, '/cart'),
             ),
             Positioned(
               right: 8,
@@ -117,7 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPostCard(Map<String, dynamic> post, int index) {
-    return Container(
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/product-detail'),
+      child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -149,25 +151,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      post['seller'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF4A3F30),
-                        fontSize: 14,
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, '/seller-profile'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        post['seller'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF4A3F30),
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    Text(
-                      post['handle'],
-                      style: const TextStyle(
-                        color: Color(0xFF9A8A75),
-                        fontSize: 12,
+                      Text(
+                        post['handle'],
+                        style: const TextStyle(
+                          color: Color(0xFF9A8A75),
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 Text(
@@ -270,6 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 
@@ -373,9 +379,9 @@ class _HomeScreenState extends State<HomeScreen> {
           return GestureDetector(
             onTap: () {
               setState(() => _selectedIndex = i);
-              if (i == 3) {
-                Navigator.pushNamed(context, '/ong');
-              }
+              if (i == 1) Navigator.pushNamed(context, '/explore');
+              if (i == 2) Navigator.pushNamed(context, '/chats-list');
+              if (i == 3) Navigator.pushNamed(context, '/saved');
             },
             child: Container(
               padding: const EdgeInsets.all(10),
