@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_nav.dart';
 
 class CheckoutStep3Screen extends StatelessWidget {
   const CheckoutStep3Screen({super.key});
@@ -133,7 +134,7 @@ class CheckoutStep3Screen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(context),
+      bottomNavigationBar: const BottomNavWidget(currentIndex: -1),
     );
   }
 
@@ -362,39 +363,4 @@ class CheckoutStep3Screen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomNav(BuildContext context) {
-    final items = [
-      Icons.home_outlined,
-      Icons.search_outlined,
-      Icons.chat_bubble_outline,
-      Icons.grid_view_outlined,
-      Icons.person_outline,
-    ];
-    return Container(
-      height: 65,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -2)),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(
-          items.length,
-              (i) => GestureDetector(
-            onTap: () {
-              if (i == 0) Navigator.pushReplacementNamed(context, '/home');
-              if (i == 2) Navigator.pushReplacementNamed(context, '/chats-list');
-            },
-            child: Icon(items[i],
-                color: const Color(0xFF9A8A75), size: 24),
-          ),
-        ),
-      ),
-    );
-  }
 }
