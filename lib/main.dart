@@ -19,6 +19,7 @@ import 'screens/order_tracking_screen.dart';
 import 'screens/orders_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/chats_list_screen.dart';
+import 'screens/profile_screen.dart';
 
 void main() {
   runApp(const RevisteApp());
@@ -63,6 +64,7 @@ class RevisteApp extends StatelessWidget {
         '/orders': (context) => const OrdersScreen(),
         '/chat': (context) => const ChatScreen(),
         '/chats-list': (context) => const ChatsListScreen(),
+        '/profile': (context) => const ProfileScreen(),
       },
     );
   }
