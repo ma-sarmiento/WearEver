@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_nav.dart';
 
 class SavedScreen extends StatefulWidget {
   const SavedScreen({super.key});
@@ -8,7 +9,6 @@ class SavedScreen extends StatefulWidget {
 }
 
 class _SavedScreenState extends State<SavedScreen> {
-  int _selectedIndex = 3;
   String _selectedCategory = 'Toda';
 
   final List<String> _categories = [
@@ -90,7 +90,7 @@ class _SavedScreenState extends State<SavedScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(),
+      bottomNavigationBar: const BottomNavWidget(currentIndex: -1),
     );
   }
 
@@ -326,53 +326,4 @@ class _SavedScreenState extends State<SavedScreen> {
     );
   }
 
-  Widget _buildBottomNav() {
-    final items = [
-      Icons.home_outlined,
-      Icons.search_outlined,
-      Icons.chat_bubble_outline,
-      Icons.grid_view_outlined,
-      Icons.person_outline,
-    ];
-    return Container(
-      height: 65,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -2)),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(items.length, (i) {
-          final isSelected = _selectedIndex == i;
-          return GestureDetector(
-            onTap: () {
-              setState(() => _selectedIndex = i);
-              if (i == 0) Navigator.pushReplacementNamed(context, '/home');
-              if (i == 1) Navigator.pushReplacementNamed(context, '/explore');
-              if (i == 2) Navigator.pushReplacementNamed(context, '/chats-list');
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: isSelected
-                  ? BoxDecoration(
-                color: const Color(0xFFB5976A).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              )
-                  : null,
-              child: Icon(items[i],
-                  color: isSelected
-                      ? const Color(0xFFB5976A)
-                      : const Color(0xFF9A8A75),
-                  size: 24),
-            ),
-          );
-        }),
-      ),
-    );
-  }
 }
