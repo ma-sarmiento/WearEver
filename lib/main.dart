@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/style_selector_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/ong_screen.dart';
+import 'screens/seller_profile_screen.dart';
+import 'screens/map_screen.dart';
+import 'screens/explore_screen.dart';
+import 'screens/saved_screen.dart';
+import 'screens/product_detail_screen.dart';
 
 void main() {
   runApp(const RevisteApp());
@@ -15,7 +21,7 @@ class RevisteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Revistete',
+      title: 'WearEver',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -31,8 +37,14 @@ class RevisteApp extends StatelessWidget {
         '/': (context) => const SplashScreen(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
+        '/style-selector': (context) => const StyleSelectorScreen(),
         '/home': (context) => const HomeScreen(),
         '/ong': (context) => const OngScreen(),
+        '/seller-profile': (context) => const SellerProfileScreen(),
+        '/map': (context) => const MapScreen(),
+        '/explore': (context) => const ExploreScreen(),
+        '/saved': (context) => const SavedScreen(),
+        '/product-detail': (context) => const ProductDetailScreen(),
       },
     );
   }
