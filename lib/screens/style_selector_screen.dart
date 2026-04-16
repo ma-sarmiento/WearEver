@@ -74,7 +74,16 @@ class _StyleSelectorScreenState extends State<StyleSelectorScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE6),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF5EFE6),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF4A3F30)),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SafeArea(
+        top: false,
         child: FadeTransition(
           opacity: _fadeAnim,
           child: Padding(
