@@ -67,69 +67,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Column(
-        children: [
-          Stack(
+    return Column(
+      children: [
+        // Cover photo + avatar overlap
+        SizedBox(
+          height: 170,
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFFE8D5C4),
-                  border: Border.all(color: const Color(0xFFB5976A), width: 2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFB5976A).withOpacity(0.2),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: Text(
-                    'MS',
-                    style: TextStyle(
-                      color: Color(0xFFB5976A),
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+              // Cover gradient banner
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 110,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF8B7355), Color(0xFF6B5B45)],
                     ),
                   ),
                 ),
               ),
+              // Avatar centered, overlapping cover bottom
               Positioned(
                 bottom: 0,
+                left: 0,
                 right: 0,
-                child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFB5976A),
-                    shape: BoxShape.circle,
+                child: Center(
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 90,
+                        height: 90,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: const Color(0xFFE8D5C4),
+                          border: Border.all(
+                              color: const Color(0xFFC4A882), width: 3),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFB5976A).withOpacity(0.25),
+                              blurRadius: 14,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'MS',
+                            style: TextStyle(
+                              color: Color(0xFFB5976A),
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFB5976A),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.edit,
+                              color: Colors.white, size: 14),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: const Icon(Icons.edit, color: Colors.white, size: 14),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Text(
-            'Miguel Sarmiento',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF4A3F30),
-            ),
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'Miguel Sarmiento',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF4A3F30),
           ),
-          const SizedBox(height: 2),
-          const Text(
-            '@miguelsar',
-            style: TextStyle(fontSize: 13, color: Color(0xFF9A8A75)),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 2),
+        const Text(
+          '@miguelsar',
+          style: TextStyle(fontSize: 13, color: Color(0xFF9A8A75)),
+        ),
+        const SizedBox(height: 8),
+      ],
     );
   }
 
