@@ -14,6 +14,10 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
 
+  final String _tagline = 'EXPLORA EL REALISMO MÁGICO';
+  int _visibleChars = 0;
+  Timer? _typewriterTimer;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +36,24 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
+    // Typewriter effect: start after 600ms so logo has faded in
+    Future.delayed(const Duration(milliseconds: 600), () {
+      _typewriterTimer =
+          Timer.periodic(const Duration(milliseconds: 75), (timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+        setState(() {
+          if (_visibleChars < _tagline.length) {
+            _visibleChars++;
+          } else {
+            timer.cancel();
+          }
+        });
+      });
+    });
+
     Timer(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
@@ -41,6 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
+    _typewriterTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -155,10 +178,10 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       ),
                       const SizedBox(height: 60),
-                      // Tagline
-                      const Text(
-                        'EXPLORA EL REALISMO MÁGICO',
-                        style: TextStyle(
+                      // Tagline — typewriter animation
+                      Text(
+                        _tagline.substring(0, _visibleChars),
+                        style: const TextStyle(
                           fontSize: 13,
                           fontStyle: FontStyle.italic,
                           color: Colors.white70,
