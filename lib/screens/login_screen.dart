@@ -12,6 +12,7 @@ class _LoginScreenState extends State<LoginScreen>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isOng = false;
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
   late Animation<Offset> _slideAnim;
@@ -101,7 +102,25 @@ class _LoginScreenState extends State<LoginScreen>
                       ],
                     ),
                   ),
-                  const SizedBox(height: 36),
+                  const SizedBox(height: 24),
+
+                  // Account type toggle
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFEDE3D4),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        _buildToggleTab('Comprador', !_isOng,
+                            () => setState(() => _isOng = false)),
+                        _buildToggleTab('Fundación ONG', _isOng,
+                            () => setState(() => _isOng = true)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
 
                   // Email field
                   _buildLabel('Email'),
@@ -217,7 +236,8 @@ class _LoginScreenState extends State<LoginScreen>
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/register');
+                        Navigator.pushNamed(
+                            context, _isOng ? '/register-ong' : '/register');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF8B7355),
@@ -236,6 +256,43 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                   const SizedBox(height: 20),
                 ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildToggleTab(String label, bool isActive, VoidCallback onTap) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isActive ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: const Color(0xFFB5976A).withOpacity(0.15),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: isActive
+                    ? const Color(0xFF4A3F30)
+                    : const Color(0xFF9A8A75),
               ),
             ),
           ),
