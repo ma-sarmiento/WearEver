@@ -171,7 +171,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: chat['isAi'] ? const Color(0xFFF5E6C8) : Colors.white,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
