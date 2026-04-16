@@ -49,7 +49,16 @@ class _RegisterScreenState extends State<RegisterScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE6),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFF5EFE6),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF4A3F30)),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SafeArea(
+        top: false,
         child: FadeTransition(
           opacity: _fadeAnim,
           child: SingleChildScrollView(
@@ -168,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/home');
+                      Navigator.pushReplacementNamed(context, '/style-selector');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFB5976A),
@@ -206,6 +215,31 @@ class _RegisterScreenState extends State<RegisterScreen>
                           color: Color(0xFF7A6A55),
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // ONG link
+                Center(
+                  child: GestureDetector(
+                    onTap: () =>
+                        Navigator.pushNamed(context, '/register-ong'),
+                    child: RichText(
+                      text: const TextSpan(
+                        style: TextStyle(fontSize: 13, color: Color(0xFF9A8A75)),
+                        children: [
+                          TextSpan(text: '¿Eres una fundación? '),
+                          TextSpan(
+                            text: 'Regístrate aquí',
+                            style: TextStyle(
+                              color: Color(0xFFB5976A),
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
