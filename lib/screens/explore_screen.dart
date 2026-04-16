@@ -173,12 +173,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
           final isSelected = _selectedFilter == filter;
           return GestureDetector(
             onTap: () => setState(() => _selectedFilter = filter),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+            child: Container(
               margin: const EdgeInsets.only(right: 8),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFB5976A) : Colors.white,
+                gradient: isSelected
+                    ? const LinearGradient(
+                        colors: [Color(0xFFC4A882), Color(0xFFB5976A)],
+                      )
+                    : null,
+                color: isSelected ? null : Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: isSelected
@@ -191,7 +195,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight:
-                  isSelected ? FontWeight.w600 : FontWeight.normal,
+                      isSelected ? FontWeight.w600 : FontWeight.normal,
                   color: isSelected ? Colors.white : const Color(0xFF7A6A55),
                 ),
               ),
