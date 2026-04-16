@@ -83,9 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
             'WearEver',
             style: TextStyle(
               color: Color(0xFF4A3F30),
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
+              fontSize: 22,
+              fontWeight: FontWeight.w300,
+              letterSpacing: 2,
+              fontStyle: FontStyle.italic,
             ),
           ),
         ],
@@ -123,19 +124,79 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody() {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      itemCount: _posts.length,
-      itemBuilder: (context, index) {
-        final post = _posts[index];
-        return Column(
-          children: [
-            _buildPostCard(post, index),
-            if (index == 0 && _showAiBubble) _buildAiBubble(),
-            const SizedBox(height: 12),
-          ],
-        );
-      },
+    return Column(
+      children: [
+        _buildWelcomeBanner(),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            itemCount: _posts.length,
+            itemBuilder: (context, index) {
+              final post = _posts[index];
+              return Column(
+                children: [
+                  _buildPostCard(post, index),
+                  if (index == 0 && _showAiBubble) _buildAiBubble(),
+                  const SizedBox(height: 12),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWelcomeBanner() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(14, 8, 14, 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Color(0xFFF5EFE6), Color(0xFFEDE3D4)],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFFEEE4D6)),
+      ),
+      child: Row(
+        children: [
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Buenos días, Miguel 👋',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF4A3F30),
+                  ),
+                ),
+                SizedBox(height: 2),
+                Text(
+                  'Descubre nuevas prendas hoy',
+                  style: TextStyle(fontSize: 12, color: Color(0xFF9A8A75)),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: const Color(0xFFB5976A).withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.checkroom_rounded,
+              color: Color(0xFFB5976A),
+              size: 20,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -152,12 +213,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFFEEE4D6)),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFB5976A).withOpacity(0.1),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+                color: const Color(0xFFB5976A).withOpacity(0.14),
+                blurRadius: 18,
+                offset: const Offset(0, 5),
               ),
             ],
           ),
