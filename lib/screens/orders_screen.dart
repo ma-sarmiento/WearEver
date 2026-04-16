@@ -147,7 +147,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   Widget _buildOrderCard(Map<String, dynamic> order) {
-    return Container(
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/order-tracking'),
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -214,6 +216,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             ],
           ),
         ],
+      ),
       ),
     );
   }

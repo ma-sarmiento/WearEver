@@ -369,49 +369,73 @@ class _MapScreenState extends State<MapScreen>
   }
 
   Widget _buildONGCard(Map<String, dynamic> ong) {
-    return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/ong'),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF5EFE6),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE0D0BC)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5EFE6),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE0D0BC)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: ong['color'],
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.volunteer_activism,
+                    color: Colors.white, size: 22),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(ong['name'],
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: Color(0xFF4A3F30))),
+                    Text(ong['address'],
+                        style: const TextStyle(
+                            fontSize: 11, color: Color(0xFF9A8A75))),
+                  ],
+                ),
+              ),
+              Text(ong['time'],
+                  style: const TextStyle(
+                      fontSize: 11, color: Color(0xFF9A8A75))),
+            ],
+          ),
+          const SizedBox(height: 8),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/ong'),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 7),
               decoration: BoxDecoration(
-                color: ong['color'],
-                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFC4A882), Color(0xFFB5976A)],
+                ),
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.volunteer_activism,
-                  color: Colors.white, size: 22),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(ong['name'],
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: Color(0xFF4A3F30))),
-                  Text(ong['address'],
-                      style: const TextStyle(
-                          fontSize: 11, color: Color(0xFF9A8A75))),
-                ],
+              child: const Center(
+                child: Text(
+                  'Ver en mapa',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
               ),
             ),
-            Text(ong['time'],
-                style:
-                    const TextStyle(fontSize: 11, color: Color(0xFF9A8A75))),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
