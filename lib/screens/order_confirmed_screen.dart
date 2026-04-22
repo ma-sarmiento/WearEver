@@ -44,6 +44,12 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen>
         backgroundColor: const Color(0xFFF5EFE6),
         elevation: 0,
         automaticallyImplyLeading: false,
+        leading: Navigator.canPop(context)
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF4A3F30)),
+                onPressed: () => Navigator.pop(context),
+              )
+            : null,
         title: const Text(
           'Pedido confirmado',
           style: TextStyle(

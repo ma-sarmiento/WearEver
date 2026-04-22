@@ -50,6 +50,22 @@ class _OngScreenState extends State<OngScreen> {
       backgroundColor: const Color(0xFFF5EFE6),
       elevation: 0,
       automaticallyImplyLeading: false,
+      leading: Navigator.canPop(context)
+          ? IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 4),
+                  ],
+                ),
+                child: const Icon(Icons.arrow_back, size: 18, color: Color(0xFFB5976A)),
+              ),
+              onPressed: () => Navigator.pop(context),
+            )
+          : null,
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           children: [
