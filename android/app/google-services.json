@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "922691666945",
+    "project_id": "wearever-eb19c",
+    "storage_bucket": "wearever-eb19c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922691666945:android:a2e34b16b41ce2b8c0ec00",
+        "android_client_info": {
+          "package_name": "com.wearever.wearever"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhOPw3H0tXfgqcsT9QJ9Q5_u749VR4yOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
