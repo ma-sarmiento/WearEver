@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/bottom_nav.dart';
 import '../services/firestore_service.dart';
+import 'new_chat_screen.dart';
 
 class ChatsListScreen extends StatefulWidget {
   const ChatsListScreen({super.key});
@@ -223,12 +224,32 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                 style: TextStyle(
                     color: Color(0xFFB5976A), fontWeight: FontWeight.w600)),
           )
-        else
+        else ...[
+          IconButton(
+            icon: const Icon(Icons.add, color: Color(0xFF4A3F30)),
+            tooltip: 'Nueva conversación',
+            onPressed: () => showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) => DraggableScrollableSheet(
+                initialChildSize: 0.92,
+                minChildSize: 0.5,
+                maxChildSize: 0.95,
+                builder: (_, controller) => ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20)),
+                  child: const NewChatScreen(),
+                ),
+              ),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.edit_outlined, color: Color(0xFF4A3F30)),
             tooltip: 'Seleccionar chats',
             onPressed: _toggleSelecting,
           ),
+        ],
       ],
     );
   }
