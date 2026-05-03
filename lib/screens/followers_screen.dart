@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/firestore_service.dart';
+import 'ong_screen.dart';
 
 /// Pantalla que muestra la lista de seguidores o seguidos de un usuario.
 /// Recibe por argumentos: { 'mode': 'followers' | 'following', 'uid': String }
@@ -40,14 +41,34 @@ class _FollowersScreenState extends State<FollowersScreen> {
     final uids = await _firestoreService.getFollowList(uid: _uid, mode: _mode);
     final users = <Map<String, dynamic>>[];
     for (final targetUid in uids) {
-      final data = await _firestoreService.getUserById(targetUid);
+      // First try users collection
+      var data = await _firestoreService.getUserById(targetUid);
+      String nombre = '';
+      String username = '';
+      String foto = '';
+      String tipo = 'usuario';
+
       if (data != null) {
-        final nombre = '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+        nombre = '${data["nombre"] ?? ""} ${data["apellido"] ?? ""}'.trim();
+        username = data['username'] as String? ?? '';
+        foto = data['foto_perfil'] as String? ?? '';
+      } else {
+        // Try ongs collection
+        final ongData = await _firestoreService.getONGById(targetUid);
+        if (ongData != null) {
+          nombre = ongData['nombre_fundacion'] as String? ?? 'ONG';
+          username = ongData['ciudad'] as String? ?? '';
+          tipo = 'ong';
+        }
+      }
+
+      if (nombre.isNotEmpty || tipo == 'ong') {
         users.add({
           'uid': targetUid,
-          'nombre': nombre.isNotEmpty ? nombre : (data['username'] ?? 'Usuario'),
-          'username': data['username'] ?? '',
-          'foto_perfil': data['foto_perfil'] ?? '',
+          'nombre': nombre.isNotEmpty ? nombre : 'Usuario',
+          'username': username,
+          'foto_perfil': foto,
+          'tipo': tipo,
         });
       }
     }
@@ -115,11 +136,18 @@ class _FollowersScreenState extends State<FollowersScreen> {
                       onTap: () {
                         if (user['uid'] == _currentUid) {
                           Navigator.pushNamed(context, '/profile');
+                        } else if (user['tipo'] == 'ong') {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (_) => OngDetailScreen(
+                              ongId: user['uid'],
+                              ongData: {'nombre_fundacion': user['nombre'], 'ciudad': user['username']},
+                            ),
+                          ));
                         } else {
                           Navigator.pushNamed(
                             context,
                             '/seller-profile',
-                            arguments: {'seller_uid': user['uid']},
+                            arguments: {'vendedor_id': user['uid']},
                           );
                         }
                       },

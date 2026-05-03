@@ -50,15 +50,28 @@ class _CheckoutStep3ScreenState extends State<CheckoutStep3Screen> {
       final metodoPago = _checkoutData['metodo_pago'] as String? ?? 'contraentrega';
       final shipping = _checkoutData['shipping'] as String? ?? 'standard';
 
-      final items = _cartItems.map((item) => {
-        'product_id': item['product_id'],
-        'nombre': item['nombre'],
-        'precio': item['precio'],
-        'talla': item['talla'],
-        'cantidad': item['cantidad'],
-        'vendedor_nombre': item['vendedor_nombre'],
-        'foto': (item['fotos'] as List?)?.isNotEmpty == true ? item['fotos'][0] : '',
-      }).toList();
+      // Enrich items with vendedor_id from products collection
+      final items = <Map<String, dynamic>>[];
+      for (final item in _cartItems) {
+        final productId = item['product_id'] as String?;
+        String vendedorId = '';
+        if (productId != null) {
+          try {
+            final prodDoc = await _firestoreService.getProductById(productId);
+            vendedorId = prodDoc?['vendedor_id'] as String? ?? '';
+          } catch (_) {}
+        }
+        items.add({
+          'product_id': productId,
+          'nombre': item['nombre'],
+          'precio': item['precio'],
+          'talla': item['talla'],
+          'cantidad': item['cantidad'],
+          'vendedor_nombre': item['vendedor_nombre'],
+          'vendedor_id': vendedorId,
+          'foto': (item['fotos'] as List?)?.isNotEmpty == true ? item['fotos'][0] : '',
+        });
+      }
 
       final orderId = await _firestoreService.createOrder(
         items: items,

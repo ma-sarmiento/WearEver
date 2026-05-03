@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/smart_back_button.dart';
 import '../services/auth_service.dart';
 
@@ -66,21 +68,28 @@ class _RegisterOngScreenState extends State<RegisterOngScreen>
     }
     setState(() => _isLoading = true);
     try {
-      await AuthService().registerUser(
+      // Create auth user first
+      final cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text,
-        nombre: _foundationNameController.text.trim(),
-        apellido: '',
-        username: _foundationNameController.text.trim().toLowerCase().replaceAll(' ', '_'),
-        tipo: 'ong',
-        extraData: {
-          'nit': _nitController.text.trim(),
-          'representante_legal': _legalRepController.text.trim(),
-          'telefono': _phoneController.text.trim(),
-          'ciudad': _cityController.text.trim(),
-          'descripcion': _descriptionController.text.trim(),
-        },
       );
+      final uid = cred.user!.uid;
+
+      // Save ONG data to 'ongs' collection (separate from users)
+      await FirebaseFirestore.instance.collection('ongs').doc(uid).set({
+        'nombre_fundacion': _foundationNameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'nit': _nitController.text.trim(),
+        'representante_legal': _legalRepController.text.trim(),
+        'telefono': _phoneController.text.trim(),
+        'ciudad': _cityController.text.trim(),
+        'descripcion': _descriptionController.text.trim(),
+        'logo_url': '',
+        'tipo': 'ong',
+        'verificada': false,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+
       if (mounted) Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
       if (mounted) {

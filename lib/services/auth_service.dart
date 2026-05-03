@@ -89,4 +89,15 @@ class AuthService {
         return 'Error: $code';
     }
   }
+  Future<void> changePassword({required String currentPassword, required String newPassword}) async {
+    final user = _auth.currentUser;
+    if (user == null || user.email == null) throw Exception('Usuario no autenticado');
+    
+    // Re-authenticate first
+    final cred = EmailAuthProvider.credential(email: user.email!, password: currentPassword);
+    await user.reauthenticateWithCredential(cred);
+    
+    // Then change password
+    await user.updatePassword(newPassword);
+  }
 }

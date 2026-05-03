@@ -142,7 +142,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                         Expanded(child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(direccion['direccion'] as String? ?? '',
+                            Text(direccion['direccion'] as String? ?? direccion['address'] as String? ?? '',
                                 style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF4A3F30))),
                             const Text('Destino de entrega', style: TextStyle(fontSize: 12, color: Color(0xFF9A8A75))),
                           ],

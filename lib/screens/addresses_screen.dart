@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../widgets/smart_back_button.dart';
 import '../widgets/bottom_nav.dart';
 import '../services/firestore_service.dart';
@@ -100,10 +101,10 @@ class _AddressesScreenState extends State<AddressesScreen> {
                     return;
                   }
                   await _firestoreService.addAddress({
-                    'label': label,
-                    'address': address,
-                    'city': city,
-                    'postal_code': _postalController.text.trim(),
+                    'alias': label,
+                    'direccion': address,
+                    'ciudad': city,
+                    'codigo_postal': _postalController.text.trim(),
                   });
                   if (ctx.mounted) Navigator.pop(ctx);
                 },
@@ -250,7 +251,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                 Row(
                   children: [
                     Text(
-                      addr['label'] as String? ?? '',
+                      addr['alias'] as String? ?? '',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,

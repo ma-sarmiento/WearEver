@@ -303,7 +303,26 @@ class FirestoreService {
   Stream<List<Map<String, dynamic>>> getOrdersStream() {
     final uid = _uid;
     if (uid == null) return const Stream.empty();
-    return _db.collection('orders').where('comprador_id', isEqualTo: uid).orderBy('created_at', descending: true).snapshots().map((snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+    return _db
+        .collection('orders')
+        .where('comprador_id', isEqualTo: uid)
+        .snapshots()
+        .map((snap) {
+      final docs = snap.docs.map((d) => {'id': d.id, ...d.data()}).toList();
+      docs.sort((a, b) {
+        final aTs = a['created_at'];
+        final bTs = b['created_at'];
+        if (aTs == null && bTs == null) return 0;
+        if (aTs == null) return 1;
+        if (bTs == null) return -1;
+        try {
+          final aDt = (aTs as dynamic).toDate() as DateTime;
+          final bDt = (bTs as dynamic).toDate() as DateTime;
+          return bDt.compareTo(aDt);
+        } catch (_) { return 0; }
+      });
+      return docs;
+    });
   }
 
   Future<String> createOrder({required List<Map<String, dynamic>> items, required Map<String, dynamic> direccion, required String metodoPago, required double subtotal, required double envio, required double total}) async {
@@ -693,5 +712,49 @@ class FirestoreService {
       'rating_avg': avg,
       'rating_count': ratings.length,
     });
+  }
+  // ─────────────────────────────────────────────
+  // MÉTODOS DE PAGO (datos PSE / Nequi)
+  // ─────────────────────────────────────────────
+
+  Future<Map<String, dynamic>?> getPaymentData() async {
+    final uid = _uid;
+    if (uid == null) return null;
+    try {
+      final doc = await _db.collection('users').doc(uid).collection('payment_data').doc('default').get();
+      if (!doc.exists) return null;
+      return doc.data();
+    } catch (_) { return null; }
+  }
+
+  Future<void> savePaymentData(Map<String, dynamic> data) async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _db
+        .collection('users')
+        .doc(uid)
+        .collection('payment_data')
+        .doc('default')
+        .set(data, SetOptions(merge: true));
+  }
+  // ─────────────────────────────────────────────
+  // CONFIGURACIÓN DE USUARIO
+  // ─────────────────────────────────────────────
+
+  Future<Map<String, dynamic>> getUserSettings() async {
+    final uid = _uid;
+    if (uid == null) return {};
+    try {
+      final doc = await _db.collection('users').doc(uid).collection('settings').doc('prefs').get();
+      if (!doc.exists) return {};
+      return doc.data() ?? {};
+    } catch (_) { return {}; }
+  }
+
+  Future<void> saveUserSettings(Map<String, dynamic> settings) async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _db.collection('users').doc(uid).collection('settings').doc('prefs')
+        .set(settings, SetOptions(merge: true));
   }
 }

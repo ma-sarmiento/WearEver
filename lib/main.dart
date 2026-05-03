@@ -28,6 +28,8 @@ import 'screens/addresses_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/create_product_screen.dart';
 import 'screens/followers_screen.dart';
+import 'screens/my_sales_screen.dart';
+import 'screens/my_products_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,6 +85,8 @@ class RevisteApp extends StatelessWidget {
         '/settings': (context) => const SettingsScreen(),
         '/create-product': (context) => const CreateProductScreen(),
         '/followers': (context) => const FollowersScreen(),
+        '/my-sales': (context) => const MySalesScreen(),
+        '/my-products': (context) => const MyProductsScreen(),
       },
     );
   }
