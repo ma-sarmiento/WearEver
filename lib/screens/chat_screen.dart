@@ -254,7 +254,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return AppBar(
       backgroundColor: const Color(0xFFF5EFE6),
       elevation: 0,
-      title: Row(
+        title: Row(
         children: [
           Container(
             width: 38, height: 38,

@@ -83,7 +83,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   PreferredSizeWidget _buildAppBar() {
     if (_searching) {
       return AppBar(
-        automaticallyImplyLeading: false,
+      automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFFF5EFE6),
         elevation: 0,
         leading: IconButton(
@@ -201,8 +201,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   _searchQuery.isNotEmpty
                       ? 'Sin resultados para "$_searchQuery"'
                       : _selectedFilter == 'Todos'
-                      ? 'Aún no hay publicaciones'
-                      : 'No hay prendas en "$_selectedFilter"',
+                          ? 'Aún no hay publicaciones'
+                          : 'No hay prendas en "$_selectedFilter"',
                   style: const TextStyle(
                       color: Color(0xFF9A8A75), fontSize: 15),
                   textAlign: TextAlign.center,
@@ -252,14 +252,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
             Expanded(
               child: ClipRRect(
                 borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(16)),
+                    const BorderRadius.vertical(top: Radius.circular(16)),
                 child: fotos.isNotEmpty
                     ? Image.network(
-                  fotos.first,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  errorBuilder: (_, __, ___) => _placeholderImage(),
-                )
+                        fotos.first,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        errorBuilder: (_, __, ___) => _placeholderImage(),
+                      )
                     : _placeholderImage(),
               ),
             ),

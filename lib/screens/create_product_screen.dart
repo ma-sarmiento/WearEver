@@ -47,7 +47,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
           ((p['precio'] as num?)?.toDouble() ?? 0).toStringAsFixed(0);
       _selectedCategoria = p['categoria'] as String?;
       _existingPhotoUrls =
-      List<String>.from(p['fotos'] ?? []);
+          List<String>.from(p['fotos'] ?? []);
       _selectedTallas.addAll(
           List<String>.from(p['tallas'] ?? []));
     }
@@ -126,7 +126,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         final List<String> newUrls = [];
         for (final photo in _newPhotos) {
           final url =
-          await storageService.uploadProductPhoto(photo, productId);
+              await storageService.uploadProductPhoto(photo, productId);
           if (url != null) newUrls.add(url);
         }
 
@@ -153,8 +153,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         final userDoc = await db.collection('users').doc(uid).get();
         final userData = userDoc.data();
         final vendedorNombre =
-        '${userData?['nombre'] ?? ''} ${userData?['apellido'] ?? ''}'
-            .trim();
+            '${userData?['nombre'] ?? ''} ${userData?['apellido'] ?? ''}'
+                .trim();
 
         final docRef = db.collection('products').doc();
         final productId = docRef.id;
@@ -162,7 +162,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         final List<String> fotosUrls = [];
         for (final photo in _newPhotos) {
           final url =
-          await storageService.uploadProductPhoto(photo, productId);
+              await storageService.uploadProductPhoto(photo, productId);
           if (url != null) fotosUrls.add(url);
         }
 
@@ -175,7 +175,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
           'fotos': fotosUrls,
           'vendedor_id': uid,
           'vendedor_nombre':
-          vendedorNombre.isEmpty ? 'Vendedor' : vendedorNombre,
+              vendedorNombre.isEmpty ? 'Vendedor' : vendedorNombre,
           'created_at': FieldValue.serverTimestamp(),
           'activo': true,
         });
@@ -230,31 +230,31 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       ),
       body: _isLoading
           ? const Center(
-          child: CircularProgressIndicator(color: Color(0xFFB5976A)))
+              child: CircularProgressIndicator(color: Color(0xFFB5976A)))
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildPhotoSection(),
-            const SizedBox(height: 20),
-            _buildField('Nombre', _nombreController,
-                hint: 'Ej: Chaqueta de cuero negra'),
-            const SizedBox(height: 14),
-            _buildField('Descripción', _descripcionController,
-                hint: 'Cuéntanos sobre la prenda...', maxLines: 4),
-            const SizedBox(height: 14),
-            _buildField('Precio (COP)', _precioController,
-                hint: 'Ej: 85000',
-                keyboardType: TextInputType.number),
-            const SizedBox(height: 20),
-            _buildCategorySelector(),
-            const SizedBox(height: 20),
-            _buildSizeSelector(),
-            const SizedBox(height: 32),
-          ],
-        ),
-      ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildPhotoSection(),
+                  const SizedBox(height: 20),
+                  _buildField('Nombre', _nombreController,
+                      hint: 'Ej: Chaqueta de cuero negra'),
+                  const SizedBox(height: 14),
+                  _buildField('Descripción', _descripcionController,
+                      hint: 'Cuéntanos sobre la prenda...', maxLines: 4),
+                  const SizedBox(height: 14),
+                  _buildField('Precio (COP)', _precioController,
+                      hint: 'Ej: 85000',
+                      keyboardType: TextInputType.number),
+                  const SizedBox(height: 20),
+                  _buildCategorySelector(),
+                  const SizedBox(height: 20),
+                  _buildSizeSelector(),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
     );
   }
 
@@ -376,7 +376,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
   Widget _buildField(String label, TextEditingController controller,
       {String hint = '', int maxLines = 1,
-        TextInputType keyboardType = TextInputType.text}) {
+      TextInputType keyboardType = TextInputType.text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

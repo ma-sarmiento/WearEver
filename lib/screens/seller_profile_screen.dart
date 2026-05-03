@@ -128,7 +128,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen>
       pinned: true,
       backgroundColor: const Color(0xFFF5EFE6),
       elevation: 0,
-      flexibleSpace: FlexibleSpaceBar(
+        flexibleSpace: FlexibleSpaceBar(
         background: Container(
           color: const Color(0xFFF5EFE6),
           child: Column(
@@ -137,21 +137,21 @@ class _SellerProfileScreenState extends State<SellerProfileScreen>
               CircleAvatar(
                 radius: 44,
                 backgroundColor:
-                const Color(0xFFB5976A).withOpacity(0.15),
+                    const Color(0xFFB5976A).withOpacity(0.15),
                 backgroundImage: fotoUrl.isNotEmpty
                     ? NetworkImage(fotoUrl)
                     : null,
                 child: fotoUrl.isEmpty
                     ? Text(
-                  nombre.isNotEmpty
-                      ? nombre.substring(0, 1).toUpperCase()
-                      : 'V',
-                  style: const TextStyle(
-                    color: Color(0xFFB5976A),
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
+                        nombre.isNotEmpty
+                            ? nombre.substring(0, 1).toUpperCase()
+                            : 'V',
+                        style: const TextStyle(
+                          color: Color(0xFFB5976A),
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
                     : null,
               ),
               const SizedBox(height: 8),
@@ -201,21 +201,21 @@ class _SellerProfileScreenState extends State<SellerProfileScreen>
                       ),
                       child: _followLoading
                           ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                            color: Color(0xFFB5976A), strokeWidth: 2),
-                      )
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                  color: Color(0xFFB5976A), strokeWidth: 2),
+                            )
                           : Text(
-                        _isFollowing ? 'Siguiendo' : 'Seguir',
-                        style: TextStyle(
-                          color: _isFollowing
-                              ? const Color(0xFFB5976A)
-                              : Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
-                      ),
+                              _isFollowing ? 'Siguiendo' : 'Seguir',
+                              style: TextStyle(
+                                color: _isFollowing
+                                    ? const Color(0xFFB5976A)
+                                    : Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -241,12 +241,12 @@ class _SellerProfileScreenState extends State<SellerProfileScreen>
   }
 
   Widget _buildActionBtn(
-      String label,
-      Color bgColor, {
-        Color textColor = Colors.white,
-        bool bordered = false,
-        VoidCallback? onTap,
-      }) {
+    String label,
+    Color bgColor, {
+    Color textColor = Colors.white,
+    bool bordered = false,
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -344,9 +344,9 @@ class _SellerProfileScreenState extends State<SellerProfileScreen>
                             top: Radius.circular(14)),
                         child: fotos.isNotEmpty
                             ? Image.network(fotos.first,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            errorBuilder: (_, __, ___) => _placeholder())
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                errorBuilder: (_, __, ___) => _placeholder())
                             : _placeholder(),
                       ),
                     ),
@@ -467,7 +467,7 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) =>
+          BuildContext context, double shrinkOffset, bool overlapsContent) =>
       Container(color: const Color(0xFFF5EFE6), child: tabBar);
 
   @override

@@ -131,9 +131,9 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                     final chat = chats[index];
                     final chatId = chat['id'] as String? ?? '';
                     final participants =
-                    List<String>.from(chat['participants'] ?? []);
+                        List<String>.from(chat['participants'] ?? []);
                     final otherUid = participants.firstWhere(
-                            (uid) => uid != _currentUid,
+                        (uid) => uid != _currentUid,
                         orElse: () => '');
                     final unread =
                         (chat['unread_$_currentUid'] as int?) ?? 0;
@@ -173,33 +173,33 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
       // Barra inferior de acciones al seleccionar
       bottomSheet: _selecting && _selectedIds.isNotEmpty
           ? Container(
-        color: Colors.white,
-        padding:
-        const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: Row(
-          children: [
-            Text(
-              '${_selectedIds.length} seleccionado${_selectedIds.length > 1 ? 's' : ''}',
-              style: const TextStyle(
-                  color: Color(0xFF4A3F30),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14),
-            ),
-            const Spacer(),
-            TextButton.icon(
-              onPressed: _deleteSelected,
-              icon: const Icon(Icons.delete_outline,
-                  color: Colors.red, size: 20),
-              label: const Text('Eliminar',
-                  style: TextStyle(
-                      color: Colors.red, fontWeight: FontWeight.w600)),
-            ),
-          ],
-        ),
-      )
+              color: Colors.white,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Row(
+                children: [
+                  Text(
+                    '${_selectedIds.length} seleccionado${_selectedIds.length > 1 ? 's' : ''}',
+                    style: const TextStyle(
+                        color: Color(0xFF4A3F30),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14),
+                  ),
+                  const Spacer(),
+                  TextButton.icon(
+                    onPressed: _deleteSelected,
+                    icon: const Icon(Icons.delete_outline,
+                        color: Colors.red, size: 20),
+                    label: const Text('Eliminar',
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.w600)),
+                  ),
+                ],
+              ),
+            )
           : null,
       bottomNavigationBar:
-      _selecting ? null : const BottomNavWidget(currentIndex: 2),
+          _selecting ? null : const BottomNavWidget(currentIndex: 2),
     );
   }
 
@@ -300,7 +300,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                         decoration: const BoxDecoration(
                           color: Color(0xFFB5976A),
                           borderRadius:
-                          BorderRadius.all(Radius.circular(6)),
+                              BorderRadius.all(Radius.circular(6)),
                         ),
                         child: const Text('Fijado',
                             style: TextStyle(
@@ -369,7 +369,7 @@ class _ChatTileState extends State<_ChatTile> {
       return;
     }
     final name =
-    await widget.firestoreService.getUserDisplayName(widget.otherUid);
+        await widget.firestoreService.getUserDisplayName(widget.otherUid);
     if (mounted) {
       setState(() {
         _displayName = name;
@@ -427,19 +427,19 @@ class _ChatTileState extends State<_ChatTile> {
               backgroundColor: const Color(0xFFB5976A).withOpacity(0.15),
               child: _loading
                   ? const SizedBox(
-                width: 14,
-                height: 14,
-                child: CircularProgressIndicator(
-                    color: Color(0xFFB5976A), strokeWidth: 2),
-              )
+                      width: 14,
+                      height: 14,
+                      child: CircularProgressIndicator(
+                          color: Color(0xFFB5976A), strokeWidth: 2),
+                    )
                   : Text(
-                _initial,
-                style: const TextStyle(
-                  color: Color(0xFFB5976A),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
+                      _initial,
+                      style: const TextStyle(
+                        color: Color(0xFFB5976A),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
             ),
             const SizedBox(width: 12),
             Expanded(

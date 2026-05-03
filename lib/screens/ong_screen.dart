@@ -16,7 +16,7 @@ class OngScreen extends StatelessWidget {
         .collection('ongs')
         .snapshots()
         .map((snap) =>
-        snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+            snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
   }
 
   @override
@@ -305,7 +305,7 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
       pinned: true,
       backgroundColor: const Color(0xFFF5EFE6),
       elevation: 0,
-      flexibleSpace: FlexibleSpaceBar(
+              flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           children: [
             Container(
@@ -389,20 +389,20 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
                         ),
                         child: _togglingFollow
                             ? const SizedBox(
-                            width: 14,
-                            height: 14,
-                            child: CircularProgressIndicator(
-                                color: Color(0xFFB5976A), strokeWidth: 2))
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                    color: Color(0xFFB5976A), strokeWidth: 2))
                             : Text(
-                          _isFollowing ? 'Siguiendo' : 'Seguir',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: _isFollowing
-                                ? const Color(0xFFB5976A)
-                                : Colors.white,
-                          ),
-                        ),
+                                _isFollowing ? 'Siguiendo' : 'Seguir',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: _isFollowing
+                                      ? const Color(0xFFB5976A)
+                                      : Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -470,36 +470,36 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
       ),
       child: _loadingStats
           ? const Center(
-          child: SizedBox(
-              height: 40,
-              child: CircularProgressIndicator(
-                  color: Color(0xFFB5976A), strokeWidth: 2)))
+              child: SizedBox(
+                  height: 40,
+                  child: CircularProgressIndicator(
+                      color: Color(0xFFB5976A), strokeWidth: 2)))
           : Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildStatItem('Seguidores', '$_seguidores',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => _FollowListScreen(
-                      uid: _ongUid,
-                      mode: 'followers',
-                      title: 'Seguidores'),
-                ),
-              )),
-          _buildDivider(),
-          _buildStatItem('Siguiendo', '$_seguidos',
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => _FollowListScreen(
-                      uid: _ongUid,
-                      mode: 'following',
-                      title: 'Siguiendo'),
-                ),
-              )),
-        ],
-      ),
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildStatItem('Seguidores', '$_seguidores',
+                    onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => _FollowListScreen(
+                                uid: _ongUid,
+                                mode: 'followers',
+                                title: 'Seguidores'),
+                          ),
+                        )),
+                _buildDivider(),
+                _buildStatItem('Siguiendo', '$_seguidos',
+                    onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => _FollowListScreen(
+                                uid: _ongUid,
+                                mode: 'following',
+                                title: 'Siguiendo'),
+                          ),
+                        )),
+              ],
+            ),
     );
   }
 
@@ -627,7 +627,7 @@ class _FollowListScreenState extends State<_FollowListScreen> {
       final data = await _firestoreService.getUserById(uid);
       if (data != null) {
         final nombre =
-        '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+            '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
         users.add({
           'uid': uid,
           'nombre': nombre.isNotEmpty ? nombre : (data['username'] ?? 'Usuario'),
@@ -653,67 +653,67 @@ class _FollowListScreenState extends State<_FollowListScreen> {
       ),
       body: _loading
           ? const Center(
-          child: CircularProgressIndicator(color: Color(0xFFB5976A)))
+              child: CircularProgressIndicator(color: Color(0xFFB5976A)))
           : _users.isEmpty
-          ? Center(
-        child: Text(
-          widget.mode == 'followers'
-              ? 'Aún no hay seguidores'
-              : 'Aún no sigue a nadie',
-          style: const TextStyle(
-              color: Color(0xFF9A8A75), fontSize: 15),
-        ),
-      )
-          : ListView.builder(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 16, vertical: 8),
-        itemCount: _users.length,
-        itemBuilder: (context, index) {
-          final u = _users[index];
-          final nombre = u['nombre'] as String;
-          final username = u['username'] as String;
-          final initial =
-          nombre.isNotEmpty ? nombre[0].toUpperCase() : '?';
-          return Container(
-            margin: const EdgeInsets.only(bottom: 2),
-            padding: const EdgeInsets.symmetric(
-                vertical: 12, horizontal: 4),
-            decoration: const BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      color: Color(0xFFEEE4D8), width: 0.5)),
-            ),
-            child: Row(children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor:
-                const Color(0xFFB5976A).withOpacity(0.15),
-                child: Text(initial,
+              ? Center(
+                  child: Text(
+                    widget.mode == 'followers'
+                        ? 'Aún no hay seguidores'
+                        : 'Aún no sigue a nadie',
                     style: const TextStyle(
-                        color: Color(0xFFB5976A),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15)),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(nombre,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF4A3F30))),
-                  if (username.isNotEmpty)
-                    Text('@$username',
-                        style: const TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFF9A8A75))),
-                ],
-              ),
-            ]),
-          );
-        },
-      ),
+                        color: Color(0xFF9A8A75), fontSize: 15),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 8),
+                  itemCount: _users.length,
+                  itemBuilder: (context, index) {
+                    final u = _users[index];
+                    final nombre = u['nombre'] as String;
+                    final username = u['username'] as String;
+                    final initial =
+                        nombre.isNotEmpty ? nombre[0].toUpperCase() : '?';
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 2),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 4),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color: Color(0xFFEEE4D8), width: 0.5)),
+                      ),
+                      child: Row(children: [
+                        CircleAvatar(
+                          radius: 22,
+                          backgroundColor:
+                              const Color(0xFFB5976A).withOpacity(0.15),
+                          child: Text(initial,
+                              style: const TextStyle(
+                                  color: Color(0xFFB5976A),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15)),
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(nombre,
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF4A3F30))),
+                            if (username.isNotEmpty)
+                              Text('@$username',
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF9A8A75))),
+                          ],
+                        ),
+                      ]),
+                    );
+                  },
+                ),
     );
   }
 }

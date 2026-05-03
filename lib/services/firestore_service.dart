@@ -55,7 +55,7 @@ class FirestoreService {
       if (userDoc.exists) {
         final data = userDoc.data()!;
         final nombre =
-        '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+            '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
         if (nombre.isNotEmpty) return nombre;
         return data['username'] as String? ?? 'Usuario';
       }
@@ -378,21 +378,21 @@ class FirestoreService {
         .map((snap) {
       final docs = snap.docs
           .map((d) => {'id': d.id, ...d.data()})
-      // Filtrar chats que el usuario ocultó
-      // PERO si llegó un mensaje nuevo después de ocultarlo, volver a mostrarlo
+          // Filtrar chats que el usuario ocultó
+          // PERO si llegó un mensaje nuevo después de ocultarlo, volver a mostrarlo
           .where((chat) {
-        final hiddenFor = List<String>.from(chat['hidden_for'] ?? []);
-        if (!hiddenFor.contains(uid)) return true;
-        // Si hay mensajes después de que se ocultó, mostrar de nuevo
-        // Para simplicidad: si last_message no está vacío y hidden_for contiene uid,
-        // comparar con cuando se ocultó. Usamos un approach simple:
-        // el chat se vuelve visible si el otro usuario envió algo después.
-        // Guardamos hidden_at_last_message para comparar.
-        final hiddenAtMsg = chat['hidden_at_last_message'] as String?;
-        final lastMsg = chat['last_message'] as String? ?? '';
-        if (hiddenAtMsg != null && lastMsg != hiddenAtMsg) return true;
-        return false;
-      })
+            final hiddenFor = List<String>.from(chat['hidden_for'] ?? []);
+            if (!hiddenFor.contains(uid)) return true;
+            // Si hay mensajes después de que se ocultó, mostrar de nuevo
+            // Para simplicidad: si last_message no está vacío y hidden_for contiene uid,
+            // comparar con cuando se ocultó. Usamos un approach simple:
+            // el chat se vuelve visible si el otro usuario envió algo después.
+            // Guardamos hidden_at_last_message para comparar.
+            final hiddenAtMsg = chat['hidden_at_last_message'] as String?;
+            final lastMsg = chat['last_message'] as String? ?? '';
+            if (hiddenAtMsg != null && lastMsg != hiddenAtMsg) return true;
+            return false;
+          })
           .toList();
 
       docs.sort((a, b) {
@@ -564,7 +564,7 @@ class FirestoreService {
 
   Stream<List<Map<String, dynamic>>> getONGsStream() {
     return _db.collection('ongs').snapshots().map(
-            (snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+        (snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
   }
 
   Future<Map<String, dynamic>?> getONGById(String ongId) async {

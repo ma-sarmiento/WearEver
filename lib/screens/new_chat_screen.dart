@@ -46,7 +46,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
       if (doc.id == _currentUid) continue;
       final data = doc.data();
       final nombre =
-      '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+          '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
       final username = data['username'] as String? ?? '';
       final tipo = data['tipo'] as String? ?? 'usuario';
       if (tipo == 'ong') continue; // las ONGs van por su colección
@@ -136,7 +136,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
             child: Container(
               padding:
-              const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -181,71 +181,71 @@ class _NewChatScreenState extends State<NewChatScreen> {
           Expanded(
             child: _loading
                 ? const Center(
-                child: CircularProgressIndicator(
-                    color: Color(0xFFB5976A)))
+                    child: CircularProgressIndicator(
+                        color: Color(0xFFB5976A)))
                 : _results.isEmpty
-                ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.search_off,
-                      size: 56,
-                      color: const Color(0xFFB5976A)
-                          .withOpacity(0.3)),
-                  const SizedBox(height: 12),
-                  Text(
-                    _query.isEmpty
-                        ? 'No hay usuarios registrados'
-                        : 'Sin resultados para "$_query"',
-                    style: const TextStyle(
-                        color: Color(0xFF9A8A75),
-                        fontSize: 14),
-                  ),
-                ],
-              ),
-            )
-                : ListView.builder(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 4),
-              itemCount: _results.length,
-              itemBuilder: (context, index) {
-                // Encabezado de sección
-                final item = _results[index];
-                final isFirst = index == 0;
-                final prevTipo = index > 0
-                    ? _results[index - 1]['tipo']
-                    : null;
-                final showHeader = isFirst ||
-                    item['tipo'] != prevTipo;
-
-                return Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
-                  children: [
-                    if (showHeader)
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: isFirst ? 4 : 16,
-                            bottom: 8),
-                        child: Text(
-                          item['tipo'] == 'usuario'
-                              ? 'Usuarios'
-                              : 'Fundaciones',
-                          style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF9A8A75),
-                              letterSpacing: 0.5),
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.search_off,
+                                size: 56,
+                                color: const Color(0xFFB5976A)
+                                    .withOpacity(0.3)),
+                            const SizedBox(height: 12),
+                            Text(
+                              _query.isEmpty
+                                  ? 'No hay usuarios registrados'
+                                  : 'Sin resultados para "$_query"',
+                              style: const TextStyle(
+                                  color: Color(0xFF9A8A75),
+                                  fontSize: 14),
+                            ),
+                          ],
                         ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        itemCount: _results.length,
+                        itemBuilder: (context, index) {
+                          // Encabezado de sección
+                          final item = _results[index];
+                          final isFirst = index == 0;
+                          final prevTipo = index > 0
+                              ? _results[index - 1]['tipo']
+                              : null;
+                          final showHeader = isFirst ||
+                              item['tipo'] != prevTipo;
+
+                          return Column(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            children: [
+                              if (showHeader)
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: isFirst ? 4 : 16,
+                                      bottom: 8),
+                                  child: Text(
+                                    item['tipo'] == 'usuario'
+                                        ? 'Usuarios'
+                                        : 'Fundaciones',
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF9A8A75),
+                                        letterSpacing: 0.5),
+                                  ),
+                                ),
+                              _UserRow(
+                                item: item,
+                                onTap: () => _openChat(item['uid']),
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                    _UserRow(
-                      item: item,
-                      onTap: () => _openChat(item['uid']),
-                    ),
-                  ],
-                );
-              },
-            ),
           ),
         ],
       ),
@@ -265,7 +265,7 @@ class _UserRow extends StatelessWidget {
     final foto = item['foto'] as String;
     final isOng = item['tipo'] == 'ong';
     final initial =
-    nombre.isNotEmpty ? nombre[0].toUpperCase() : '?';
+        nombre.isNotEmpty ? nombre[0].toUpperCase() : '?';
 
     return GestureDetector(
       onTap: onTap,
@@ -274,7 +274,7 @@ class _UserRow extends StatelessWidget {
         decoration: const BoxDecoration(
           border: Border(
               bottom:
-              BorderSide(color: Color(0xFFEEE4D8), width: 0.5)),
+                  BorderSide(color: Color(0xFFEEE4D8), width: 0.5)),
         ),
         child: Row(
           children: [
@@ -285,16 +285,16 @@ class _UserRow extends StatelessWidget {
                   ? const Color(0xFFE8D5C4)
                   : const Color(0xFFB5976A).withOpacity(0.15),
               backgroundImage:
-              foto.isNotEmpty ? NetworkImage(foto) : null,
+                  foto.isNotEmpty ? NetworkImage(foto) : null,
               child: foto.isEmpty
                   ? isOng
-                  ? const Icon(Icons.volunteer_activism,
-                  color: Color(0xFFB5976A), size: 20)
-                  : Text(initial,
-                  style: const TextStyle(
-                      color: Color(0xFFB5976A),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15))
+                      ? const Icon(Icons.volunteer_activism,
+                          color: Color(0xFFB5976A), size: 20)
+                      : Text(initial,
+                          style: const TextStyle(
+                              color: Color(0xFFB5976A),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15))
                   : null,
             ),
             const SizedBox(width: 12),
