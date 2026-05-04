@@ -76,7 +76,12 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
             leading: const Icon(Icons.location_on_outlined, color: Color(0xFFB5976A)),
             title: Text(addr['alias'] as String? ?? 'Dirección',
                 style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF4A3F30))),
-            subtitle: Text(addr['direccion'] as String? ?? ''),
+            subtitle: Text(
+              '${addr['address'] ?? ''}${(addr['city'] as String? ?? '').isNotEmpty ? ', ${addr['city']}' : ''}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Color(0xFF9A8A75), fontSize: 12),
+            ),
             trailing: _selectedAddress?['id'] == addr['id']
                 ? const Icon(Icons.check_circle, color: Color(0xFFB5976A))
                 : null,
@@ -120,60 +125,60 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Color(0xFFB5976A)))
           : Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildStepIndicator(1),
-                        const SizedBox(height: 24),
-                        // Dirección
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Dirección de envío',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF4A3F30))),
-                            if (_addresses.isNotEmpty)
-                              GestureDetector(
-                                onTap: _showAddressPicker,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFB5976A).withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Text('Cambiar',
-                                      style: TextStyle(color: Color(0xFFB5976A), fontSize: 12, fontWeight: FontWeight.w500)),
-                                ),
-                              ),
-                          ],
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildStepIndicator(1),
+                  const SizedBox(height: 24),
+                  // Dirección
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Dirección de envío',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF4A3F30))),
+                      if (_addresses.isNotEmpty)
+                        GestureDetector(
+                          onTap: _showAddressPicker,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFB5976A).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Text('Cambiar',
+                                style: TextStyle(color: Color(0xFFB5976A), fontSize: 12, fontWeight: FontWeight.w500)),
+                          ),
                         ),
-                        const SizedBox(height: 12),
-                        if (_selectedAddress != null)
-                          _buildAddressCard(_selectedAddress!)
-                        else
-                          _buildNoAddress(),
-                        const SizedBox(height: 24),
-                        // Envío
-                        const Text('Tipo de envío',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF4A3F30))),
-                        const SizedBox(height: 12),
-                        _buildShippingOption(id: 'standard', label: 'Estándar (3–5 días)',
-                            price: _formatPrice(_shippingStandard)),
-                        const SizedBox(height: 10),
-                        _buildShippingOption(id: 'express', label: 'Exprés (24–48 h)',
-                            price: _formatPrice(_shippingExpress)),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
+                    ],
                   ),
-                ),
-                // Total fijo abajo
-                _buildBottomTotal(),
-              ],
+                  const SizedBox(height: 12),
+                  if (_selectedAddress != null)
+                    _buildAddressCard(_selectedAddress!)
+                  else
+                    _buildNoAddress(),
+                  const SizedBox(height: 24),
+                  // Envío
+                  const Text('Tipo de envío',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF4A3F30))),
+                  const SizedBox(height: 12),
+                  _buildShippingOption(id: 'standard', label: 'Estándar (3–5 días)',
+                      price: _formatPrice(_shippingStandard)),
+                  const SizedBox(height: 10),
+                  _buildShippingOption(id: 'express', label: 'Exprés (24–48 h)',
+                      price: _formatPrice(_shippingExpress)),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
+          ),
+          // Total fijo abajo
+          _buildBottomTotal(),
+        ],
+      ),
       bottomNavigationBar: const BottomNavWidget(currentIndex: -1),
     );
   }
@@ -208,10 +213,11 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(addr['alias'] as String? ?? 'Mi dirección',
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: Color(0xFF4A3F30))),
-          Text(addr['direccion'] as String? ?? '',
-              style: const TextStyle(fontSize: 13, color: Color(0xFF7A6A55))),
-          if ((addr['ciudad'] as String? ?? '').isNotEmpty)
-            Text(addr['ciudad'] as String, style: const TextStyle(fontSize: 12, color: Color(0xFF9A8A75))),
+          if ((addr['address'] as String? ?? '').isNotEmpty)
+            Text(addr['address'] as String,
+                style: const TextStyle(fontSize: 13, color: Color(0xFF7A6A55))),
+          if ((addr['city'] as String? ?? '').isNotEmpty)
+            Text(addr['city'] as String, style: const TextStyle(fontSize: 12, color: Color(0xFF9A8A75))),
         ])),
       ]),
     );

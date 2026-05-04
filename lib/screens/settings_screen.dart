@@ -46,6 +46,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
   }
 
+
+  void _showInfoDialog(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFFF5EFE6),
+        title: Text(title, style: const TextStyle(color: Color(0xFF4A3F30), fontSize: 16, fontWeight: FontWeight.w600)),
+        content: Text(content, style: const TextStyle(color: Color(0xFF7A6A55), fontSize: 13, height: 1.5)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cerrar', style: TextStyle(color: Color(0xFFB5976A), fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showChangePasswordDialog() {
     final currentCtrl = TextEditingController();
     final newCtrl = TextEditingController();
@@ -169,9 +187,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 20),
                 _sectionTitle('Sobre WearEver'),
                 _card([
-                  _tapItem('Términos y condiciones', Icons.description_outlined),
+                  _tapItem('Términos y condiciones', Icons.description_outlined,
+                      onTap: () => _showInfoDialog('Términos y condiciones',
+                          'Al usar WearEver aceptas que los vendedores son responsables de sus productos. WearEver es una plataforma de intermediación y no se responsabiliza por disputas entre compradores y vendedores.')),
                   _divider(),
-                  _tapItem('Política de privacidad', Icons.policy_outlined),
+                  _tapItem('Política de privacidad', Icons.policy_outlined,
+                      onTap: () => _showInfoDialog('Política de privacidad',
+                          'Tus datos personales son usados únicamente para operar la plataforma. No compartimos tu información con terceros. Puedes eliminar tu cuenta en cualquier momento contactando a soporte.')),
                   _divider(),
                   _infoItem('Versión 1.0.0'),
                 ]),

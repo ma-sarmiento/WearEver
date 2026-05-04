@@ -12,7 +12,20 @@
           "package_name": "com.wearever.wearever"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "922691666945-fd29pnusodge4meepueu568454jdfil6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wearever.wearever",
+            "certificate_hash": "2dec964217c04af446e48a6d928b8bf9857c5ebe"
+          }
+        },
+        {
+          "client_id": "922691666945-o174jkcs1impeaba8qccfh1jrah90sgo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBhOPw3H0tXfgqcsT9QJ9Q5_u749VR4yOo"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922691666945-o174jkcs1impeaba8qccfh1jrah90sgo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

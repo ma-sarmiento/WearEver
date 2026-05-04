@@ -34,29 +34,14 @@ class _MySalesScreenState extends State<MySalesScreen> {
     return _db
         .collection('orders')
         .snapshots()
-        .asyncMap((snap) async {
-      // Filtrar pedidos que contienen al menos un ítem de este vendedor
-      final List<Map<String, dynamic>> result = [];
+        .map((snap) {
+      // Filter: orders that have at least one item with vendedor_id == _uid
+      final result = <Map<String, dynamic>>[];
       for (final doc in snap.docs) {
         final data = doc.data();
         final items = List<Map<String, dynamic>>.from(data['items'] ?? []);
-        final myItems = items.where((i) => i['vendedor_id'] == _uid || i['vendedor_nombre'] != null).toList();
-        // Check if any item belongs to this seller
-        bool isMine = false;
-        for (final item in items) {
-          // We identify by checking items - seller_id stored in product
-          final productId = item['product_id'] as String?;
-          if (productId != null) {
-            final prodDoc = await _db.collection('products').doc(productId).get();
-            if (prodDoc.exists && prodDoc.data()?['vendedor_id'] == _uid) {
-              isMine = true;
-              break;
-            }
-          }
-        }
-        if (isMine) {
-          result.add({'id': doc.id, ...data});
-        }
+        final isMine = items.any((item) => item['vendedor_id'] == _uid);
+        if (isMine) result.add({'id': doc.id, ...data});
       }
       result.sort((a, b) {
         final aTs = a['created_at'];

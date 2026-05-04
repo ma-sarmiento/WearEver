@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return price
         .toStringAsFixed(0)
         .replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.');
   }
 
   @override
@@ -63,16 +63,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   radius: 16,
                   backgroundColor: const Color(0xFFB5976A).withOpacity(0.15),
                   backgroundImage:
-                      fotoUrl.isNotEmpty ? NetworkImage(fotoUrl) : null,
+                  fotoUrl.isNotEmpty ? NetworkImage(fotoUrl) : null,
                   child: fotoUrl.isEmpty
                       ? Text(
-                          initials.isNotEmpty ? initials : 'W',
-                          style: const TextStyle(
-                            color: Color(0xFFB5976A),
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
+                    initials.isNotEmpty ? initials : 'W',
+                    style: const TextStyle(
+                      color: Color(0xFFB5976A),
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
                       : null,
                 ),
               ),
@@ -248,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pushNamed(context, '/explore'),
                 style: TextButton.styleFrom(
                   backgroundColor:
-                      const Color(0xFFB5976A).withOpacity(0.3),
+                  const Color(0xFFB5976A).withOpacity(0.3),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   padding: const EdgeInsets.symmetric(
@@ -273,6 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final nombre = product['nombre'] as String? ?? '';
     final vendedorNombre = product['vendedor_nombre'] as String? ?? '';
     final vendedorId = product['vendedor_id'] as String? ?? '';
+    final vendedorFoto = product['vendedor_foto'] as String? ?? '';
     final currentUid = FirebaseAuth.instance.currentUser?.uid;
     final isOwn = vendedorId == currentUid;
 
@@ -310,16 +311,16 @@ class _HomeScreenState extends State<HomeScreen> {
             // Imagen
             ClipRRect(
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(18)),
+              const BorderRadius.vertical(top: Radius.circular(18)),
               child: SizedBox(
                 height: 200,
                 width: double.infinity,
                 child: fotos.isNotEmpty
                     ? Image.network(
-                        fotos.first,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _placeholder(),
-                      )
+                  fotos.first,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => _placeholder(),
+                )
                     : _placeholder(),
               ),
             ),
@@ -348,10 +349,33 @@ class _HomeScreenState extends State<HomeScreen> {
                             '/seller-profile',
                             arguments: {'vendedor_id': vendedorId},
                           ),
-                          child: Text(
-                            vendedorNombre,
-                            style: const TextStyle(
-                                fontSize: 13, color: Color(0xFF9A8A75)),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 10,
+                                backgroundColor: const Color(0xFFE8D5C4),
+                                backgroundImage: vendedorFoto.isNotEmpty
+                                    ? NetworkImage(vendedorFoto)
+                                    : null,
+                                child: vendedorFoto.isEmpty
+                                    ? Text(
+                                  vendedorNombre.isNotEmpty
+                                      ? vendedorNombre[0].toUpperCase()
+                                      : '?',
+                                  style: const TextStyle(
+                                      fontSize: 9,
+                                      color: Color(0xFFB5976A),
+                                      fontWeight: FontWeight.bold),
+                                )
+                                    : null,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                vendedorNombre,
+                                style: const TextStyle(
+                                    fontSize: 13, color: Color(0xFF9A8A75)),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -387,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
                           padding:
-                              const EdgeInsets.symmetric(vertical: 10),
+                          const EdgeInsets.symmetric(vertical: 10),
                         ),
                         child: const Text('Ver producto',
                             style: TextStyle(fontSize: 13)),
@@ -402,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: const Color(0xFFF5EFE6),
                         borderRadius: BorderRadius.circular(10),
                         border:
-                            Border.all(color: const Color(0xFFE0D0BC)),
+                        Border.all(color: const Color(0xFFE0D0BC)),
                       ),
                       child: const Icon(Icons.bookmark_border,
                           color: Color(0xFFB5976A), size: 18),

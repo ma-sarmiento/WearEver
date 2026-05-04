@@ -17,14 +17,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
   final List<String> _filters = [
     'Todos',
     'Pendiente',
-    'Preparando',
+    'Alistando',
     'Enviado',
     'Entregado',
   ];
 
   Color _statusColor(String estado) {
     switch (estado) {
-      case 'Preparando':
+      case 'Alistando':
         return const Color(0xFFE8A000);
       case 'Enviado':
         return const Color(0xFF4CAF50);
@@ -49,12 +49,60 @@ class _OrdersScreenState extends State<OrdersScreen> {
     }
   }
 
+  Future<void> _cancelOrder(String orderId) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Cancelar pedido',
+            style: TextStyle(color: Color(0xFF4A3F30), fontWeight: FontWeight.w600)),
+        content: const Text(
+          '¿Seguro que quieres cancelar este pedido? Esta acción no se puede deshacer.',
+          style: TextStyle(color: Color(0xFF9A8A75), fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('No, mantener',
+                style: TextStyle(color: Color(0xFF9A8A75))),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Sí, cancelar',
+                style: TextStyle(color: Color(0xFFD32F2F), fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true) return;
+    try {
+      await _firestoreService.cancelOrder(orderId);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pedido cancelado'),
+            backgroundColor: Color(0xFF4A3F30),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', '')),
+            backgroundColor: const Color(0xFFD32F2F),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE6),
       appBar: AppBar(
-      automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFFF5EFE6),
         elevation: 0,
         title: const Text('Pedidos',
@@ -134,8 +182,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
         final orders = _selectedFilter == 'Todos'
             ? allOrders
             : allOrders
-                .where((o) => o['estado'] == _selectedFilter)
-                .toList();
+            .where((o) => o['estado'] == _selectedFilter)
+            .toList();
 
         if (orders.isEmpty) {
           return Center(
@@ -175,6 +223,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final items = List<dynamic>.from(order['items'] ?? []);
     final date = _formatDate(order['created_at']);
     final shortId = '#${orderId.substring(0, orderId.length.clamp(0, 8)).toUpperCase()}';
+    final isPendiente = estado == 'Pendiente';
 
     return GestureDetector(
       onTap: () => Navigator.pushNamed(
@@ -210,21 +259,50 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     color: Color(0xFF4A3F30),
                   ),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: _statusColor(estado).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    estado,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: _statusColor(estado),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _statusColor(estado).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        estado,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: _statusColor(estado),
+                        ),
+                      ),
                     ),
-                  ),
+                    // Botón cancelar solo en Pendiente
+                    if (isPendiente) ...[
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () => _cancelOrder(orderId),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD32F2F).withOpacity(0.08),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: const Color(0xFFD32F2F).withOpacity(0.3)),
+                          ),
+                          child: const Text(
+                            'Cancelar',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFFD32F2F),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),
@@ -232,7 +310,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
             Text(
               '${items.length} artículo${items.length != 1 ? 's' : ''}',
               style: const TextStyle(
-                  fontSize: 13, color: Color(0xFF9A8A75)),
+                  fontSize: 13,
+                  color: Color(0xFF9A8A75)),
             ),
             if (date.isNotEmpty) ...[
               const SizedBox(height: 2),

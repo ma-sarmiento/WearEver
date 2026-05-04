@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/smart_back_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../services/firestore_service.dart';
 
 class StyleSelectorScreen extends StatefulWidget {
@@ -67,9 +66,6 @@ class _StyleSelectorScreenState extends State<StyleSelectorScreen>
 
   Future<void> _onContinue() async {
     final styles = _selectedStyles.toList();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('style_selected', true);
-    await prefs.setStringList('saved_styles', styles);
     await FirestoreService().updateUserStyles(styles);
     if (mounted) Navigator.pushReplacementNamed(context, '/home');
   }

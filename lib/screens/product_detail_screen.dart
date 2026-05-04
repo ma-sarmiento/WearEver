@@ -203,6 +203,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final categoria = product['categoria'] as String? ?? '';
     final vendedorNombre = product['vendedor_nombre'] as String? ?? '';
     final vendedorId = product['vendedor_id'] as String? ?? '';
+    final vendedorFoto = product['vendedor_foto'] as String? ?? '';
     final productId = product['id'] as String? ?? '';
 
     return Scaffold(
@@ -211,7 +212,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: [
           CustomScrollView(
             slivers: [
-              _buildSliverAppBar(fotos, vendedorNombre, vendedorId),
+              _buildSliverAppBar(fotos, vendedorNombre, vendedorId, vendedorFoto),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
@@ -246,13 +247,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _buildSliverAppBar(
-      List<String> fotos, String vendedorNombre, String vendedorId) {
+      List<String> fotos, String vendedorNombre, String vendedorId, String vendedorFoto) {
     return SliverAppBar(
       expandedHeight: 320,
       pinned: true,
       backgroundColor: const Color(0xFFF5EFE6),
       elevation: 0,
-        title: const Text(
+      title: const Text(
         'Publicación',
         style: TextStyle(
           color: Color(0xFF4A3F30),
@@ -267,31 +268,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             // Imagen principal
             fotos.isNotEmpty
                 ? PageView.builder(
-                    itemCount: fotos.length,
-                    onPageChanged: (i) =>
-                        setState(() => _currentImage = i),
-                    itemBuilder: (context, i) => Image.network(
-                      fotos[i],
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: const Color(0xFFE8D5C4),
-                        child: Center(
-                          child: Icon(Icons.checkroom,
-                              size: 80,
-                              color: const Color(0xFFB5976A).withOpacity(0.3)),
-                        ),
-                      ),
-                    ),
-                  )
-                : Container(
-                    color: const Color(0xFFE8D5C4),
-                    child: Center(
-                      child: Icon(Icons.checkroom,
-                          size: 120,
-                          color: const Color(0xFFB5976A).withOpacity(0.3)),
-                    ),
+              itemCount: fotos.length,
+              onPageChanged: (i) =>
+                  setState(() => _currentImage = i),
+              itemBuilder: (context, i) => Image.network(
+                fotos[i],
+                fit: BoxFit.cover,
+                width: double.infinity,
+                errorBuilder: (_, __, ___) => Container(
+                  color: const Color(0xFFE8D5C4),
+                  child: Center(
+                    child: Icon(Icons.checkroom,
+                        size: 80,
+                        color: const Color(0xFFB5976A).withOpacity(0.3)),
                   ),
+                ),
+              ),
+            )
+                : Container(
+              color: const Color(0xFFE8D5C4),
+              child: Center(
+                child: Icon(Icons.checkroom,
+                    size: 120,
+                    color: const Color(0xFFB5976A).withOpacity(0.3)),
+              ),
+            ),
             // Vendedor overlay
             Positioned(
               top: 90,
@@ -302,8 +303,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   CircleAvatar(
                     radius: 18,
                     backgroundColor: const Color(0xFFD4B896),
-                    child: const Icon(Icons.store,
-                        color: Color(0xFFB5976A), size: 18),
+                    backgroundImage: vendedorFoto.isNotEmpty
+                        ? NetworkImage(vendedorFoto)
+                        : null,
+                    child: vendedorFoto.isEmpty
+                        ? Text(
+                      vendedorNombre.isNotEmpty
+                          ? vendedorNombre[0].toUpperCase()
+                          : '?',
+                      style: const TextStyle(
+                          color: Color(0xFFB5976A),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14),
+                    )
+                        : null,
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
@@ -324,12 +337,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   const Spacer(),
                   if (!_isOwner)
                     _buildSellerButton('Chat', Colors.white,
-                      textColor: const Color(0xFFB5976A), bordered: true,
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        '/chat',
-                        arguments: {'other_uid': vendedorId},
-                      )),
+                        textColor: const Color(0xFFB5976A), bordered: true,
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          '/chat',
+                          arguments: {'other_uid': vendedorId},
+                        )),
                 ],
               ),
             ),
@@ -343,7 +356,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     fotos.length,
-                    (i) => Container(
+                        (i) => Container(
                       margin: const EdgeInsets.symmetric(horizontal: 3),
                       width: _currentImage == i ? 16 : 7,
                       height: 7,
@@ -365,8 +378,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Widget _buildSellerButton(String label, Color bgColor,
       {Color textColor = Colors.white,
-      bool bordered = false,
-      VoidCallback? onTap}) {
+        bool bordered = false,
+        VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -529,16 +542,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               child: _addingToCart
                   ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                          color: Colors.white, strokeWidth: 2))
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                      color: Colors.white, strokeWidth: 2))
                   : const Text('Agregar al carrito',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600)),
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600)),
             ),
-        ),
+          ),
       ],
     );
   }
@@ -821,12 +834,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed:
-                    (_myRating == 0 || _submittingReview) ? null : _submitReview,
+                (_myRating == 0 || _submittingReview) ? null : _submitReview,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFB5976A),
                   foregroundColor: Colors.white,
                   disabledBackgroundColor:
-                      const Color(0xFFB5976A).withOpacity(0.3),
+                  const Color(0xFFB5976A).withOpacity(0.3),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
@@ -834,13 +847,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 child: _submittingReview
                     ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                            color: Colors.white, strokeWidth: 2))
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                        color: Colors.white, strokeWidth: 2))
                     : const Text('Publicar reseña',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w600)),
+                    style: TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w600)),
               ),
             ),
             const SizedBox(height: 16),
@@ -855,10 +868,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                     child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator(
-                      color: Color(0xFFB5976A), strokeWidth: 2),
-                ));
+                      padding: EdgeInsets.all(16),
+                      child: CircularProgressIndicator(
+                          color: Color(0xFFB5976A), strokeWidth: 2),
+                    ));
               }
               final reviews = snapshot.data ?? [];
               if (reviews.isEmpty) {
@@ -931,7 +944,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Row(
                   children: List.generate(
                     5,
-                    (i) => Icon(
+                        (i) => Icon(
                       i < rating
                           ? Icons.star_rounded
                           : Icons.star_outline_rounded,

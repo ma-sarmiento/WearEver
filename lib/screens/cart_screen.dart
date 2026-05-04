@@ -34,8 +34,8 @@ class CartScreen extends StatelessWidget {
 
           final subtotal = items.fold<double>(
             0,
-            (sum, item) =>
-                sum +
+                (sum, item) =>
+            sum +
                 ((item['precio'] as num?)?.toDouble() ?? 0) *
                     ((item['cantidad'] as int?) ?? 1),
           );
@@ -68,7 +68,11 @@ class CartScreen extends StatelessWidget {
       automaticallyImplyLeading: false,
       backgroundColor: const Color(0xFFF5EFE6),
       elevation: 0,
-        title: const Text(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Color(0xFF4A3F30)),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: const Text(
         'Carrito',
         style: TextStyle(
             color: Color(0xFF4A3F30),
@@ -150,7 +154,7 @@ class CartScreen extends StatelessWidget {
               height: 80,
               child: fotos.isNotEmpty
                   ? Image.network(fotos.first, fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _placeholder())
+                  errorBuilder: (_, __, ___) => _placeholder())
                   : _placeholder(),
             ),
           ),

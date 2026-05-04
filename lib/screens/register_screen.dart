@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/smart_back_button.dart';
 import '../services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -20,6 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen>
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
   bool _isLoading = false;
+  bool _isGoogleLoading = false;
 
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
@@ -31,8 +31,8 @@ class _RegisterScreenState extends State<RegisterScreen>
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
-    _fadeAnim = Tween<double>(begin: 0, end: 1)
-        .animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
+    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _animController.forward();
   }
 
@@ -83,15 +83,44 @@ class _RegisterScreenState extends State<RegisterScreen>
     }
   }
 
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isGoogleLoading = true);
+    try {
+      // loginOnly: false → permite crear cuenta nueva con Google
+      final isNewUser = await AuthService().signInWithGoogle(loginOnly: false);
+      if (!mounted) return;
+      if (isNewUser) {
+        Navigator.pushReplacementNamed(context, '/complete-profile');
+      } else {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: const Color(0xFFD32F2F),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isGoogleLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE6),
       appBar: AppBar(
-      automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFFF5EFE6),
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: Color(0xFF4A3F30), size: 20),
+          onPressed: () => Navigator.pop(context),
         ),
+      ),
       body: SafeArea(
         top: false,
         child: FadeTransition(
@@ -139,10 +168,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                       const SizedBox(height: 4),
                       const Text(
                         'Dale nueva vida a tu estilo.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF7A6A55),
-                        ),
+                        style: TextStyle(fontSize: 14, color: Color(0xFF7A6A55)),
                       ),
                     ],
                   ),
@@ -156,16 +182,12 @@ class _RegisterScreenState extends State<RegisterScreen>
                   children: [
                     Expanded(
                       child: _buildTextField(
-                        controller: _firstNameController,
-                        hint: 'Nombre',
-                      ),
+                          controller: _firstNameController, hint: 'Nombre'),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildTextField(
-                        controller: _lastNameController,
-                        hint: 'Apellido',
-                      ),
+                          controller: _lastNameController, hint: 'Apellido'),
                     ),
                   ],
                 ),
@@ -174,7 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                 _buildLabel('Username'),
                 const SizedBox(height: 6),
                 _buildTextField(
-                    controller: _usernameController, hint: 'Value'),
+                    controller: _usernameController, hint: '@usuario'),
                 const SizedBox(height: 16),
 
                 _buildLabel('Correo'),
@@ -206,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                 ),
                 const SizedBox(height: 30),
 
-                // Register button
+                // 1. Botón principal: Registrarse
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -217,50 +239,82 @@ class _RegisterScreenState extends State<RegisterScreen>
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                          borderRadius: BorderRadius.circular(12)),
                     ),
                     child: _isLoading
                         ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2.5,
-                            ),
-                          )
-                        : const Text(
-                            'Registrarse',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                          color: Colors.white, strokeWidth: 2.5),
+                    )
+                        : const Text('Registrarse',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500)),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 24),
 
-                // Cancel button
+                // 2. Divisor "o regístrate con" + botón Google
+                Row(children: [
+                  Expanded(
+                      child: Divider(
+                          color: const Color(0xFFB5976A).withOpacity(0.3),
+                          thickness: 1)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text('o regístrate con',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: const Color(0xFF9A8A75).withOpacity(0.8))),
+                  ),
+                  Expanded(
+                      child: Divider(
+                          color: const Color(0xFFB5976A).withOpacity(0.3),
+                          thickness: 1)),
+                ]),
+                const SizedBox(height: 16),
+
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: _isGoogleLoading ? null : _handleGoogleSignIn,
                     style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
                       side: BorderSide(
-                          color: const Color(0xFFB5976A).withOpacity(0.5)),
+                          color: const Color(0xFFB5976A).withOpacity(0.3)),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                          borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: const Text(
-                      'Cancelar',
-                      style: TextStyle(
-                          color: Color(0xFF7A6A55),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500),
+                    child: _isGoogleLoading
+                        ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                            color: Color(0xFFB5976A), strokeWidth: 2))
+                        : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child:
+                          CustomPaint(painter: _GoogleIconPainter()),
+                        ),
+                        const SizedBox(width: 10),
+                        const Text(
+                          'Continuar con Google',
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xFF4A3F30),
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
                 // ONG link
                 Center(
@@ -269,7 +323,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                         Navigator.pushNamed(context, '/register-ong'),
                     child: RichText(
                       text: const TextSpan(
-                        style: TextStyle(fontSize: 13, color: Color(0xFF9A8A75)),
+                        style:
+                        TextStyle(fontSize: 13, color: Color(0xFF9A8A75)),
                         children: [
                           TextSpan(text: '¿Eres una fundación? '),
                           TextSpan(
@@ -295,14 +350,11 @@ class _RegisterScreenState extends State<RegisterScreen>
   }
 
   Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
-        color: Color(0xFF4A3F30),
-      ),
-    );
+    return Text(text,
+        style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF4A3F30)));
   }
 
   Widget _buildTextField({
@@ -323,11 +375,13 @@ class _RegisterScreenState extends State<RegisterScreen>
         const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+          borderSide:
+          BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+          borderSide:
+          BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -347,27 +401,26 @@ class _RegisterScreenState extends State<RegisterScreen>
       obscureText: obscure,
       style: const TextStyle(color: Color(0xFF4A3F30)),
       decoration: InputDecoration(
-        hintText: 'Value',
+        hintText: '••••••••',
         hintStyle: const TextStyle(color: Color(0xFFB0A090), fontSize: 14),
         filled: true,
         fillColor: Colors.white,
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         suffixIcon: IconButton(
-          icon: Icon(
-            obscure ? Icons.visibility_off : Icons.visibility,
-            color: const Color(0xFFB5976A),
-            size: 18,
-          ),
+          icon: Icon(obscure ? Icons.visibility_off : Icons.visibility,
+              color: const Color(0xFFB5976A), size: 18),
           onPressed: onToggle,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+          borderSide:
+          BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+          borderSide:
+          BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -376,4 +429,52 @@ class _RegisterScreenState extends State<RegisterScreen>
       ),
     );
   }
+}
+
+// Pintor del ícono G de Google con sus colores oficiales
+class _GoogleIconPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..style = PaintingStyle.fill;
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2;
+
+    paint.color = Colors.white;
+    canvas.drawCircle(center, radius, paint);
+
+    final rect = Rect.fromCircle(center: center, radius: radius * 0.78);
+
+    paint.color = const Color(0xFF4285F4);
+    canvas.drawArc(rect, 3.14 * 0.25, 3.14 * 1.0, false,
+        paint
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = size.width * 0.22
+          ..strokeCap = StrokeCap.butt);
+
+    paint.color = const Color(0xFFEA4335);
+    canvas.drawArc(rect, -3.14 * 0.25, 3.14 * 0.5, false,
+        paint..color = const Color(0xFFEA4335));
+
+    paint.color = const Color(0xFFFBBC05);
+    canvas.drawArc(rect, 3.14 * 0.25, 3.14 * 0.5, false,
+        paint..color = const Color(0xFFFBBC05));
+
+    canvas.drawArc(rect, 3.14 * 0.75, 3.14 * 0.5, false,
+        paint..color = const Color(0xFF34A853));
+
+    paint
+      ..color = const Color(0xFF4285F4)
+      ..style = PaintingStyle.fill;
+    canvas.drawRect(
+      Rect.fromLTWH(
+          center.dx - size.width * 0.02,
+          center.dy - size.height * 0.12,
+          size.width * 0.52,
+          size.height * 0.24),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

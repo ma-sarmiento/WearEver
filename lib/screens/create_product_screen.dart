@@ -47,7 +47,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
           ((p['precio'] as num?)?.toDouble() ?? 0).toStringAsFixed(0);
       _selectedCategoria = p['categoria'] as String?;
       _existingPhotoUrls =
-          List<String>.from(p['fotos'] ?? []);
+      List<String>.from(p['fotos'] ?? []);
       _selectedTallas.addAll(
           List<String>.from(p['tallas'] ?? []));
     }
@@ -65,22 +65,14 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
   Future<void> _pickPhoto() async {
     if (_totalPhotos >= 3) return;
-    try {
-      final picker = ImagePicker();
-      final picked = await picker.pickImage(
-          source: ImageSource.gallery, imageQuality: 80);
-      if (picked != null) {
-        setState(() => _newPhotos.add(File(picked.path)));
-      }
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Esta función requiere un dispositivo físico'),
-            backgroundColor: Color(0xFFD32F2F),
-          ),
-        );
-      }
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+      maxWidth: 1080,
+    );
+    if (picked != null && mounted) {
+      setState(() => _newPhotos.add(File(picked.path)));
     }
   }
 
@@ -125,9 +117,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         // Subir fotos nuevas si las hay
         final List<String> newUrls = [];
         for (final photo in _newPhotos) {
-          final url =
-              await storageService.uploadProductPhoto(photo, productId);
-          if (url != null) newUrls.add(url);
+          final url = await storageService.uploadProductPhoto(photo, productId);
+          newUrls.add(url);
         }
 
         await db.collection('products').doc(productId).update({
@@ -153,17 +144,17 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         final userDoc = await db.collection('users').doc(uid).get();
         final userData = userDoc.data();
         final vendedorNombre =
-            '${userData?['nombre'] ?? ''} ${userData?['apellido'] ?? ''}'
-                .trim();
+        '${userData?['nombre'] ?? ''} ${userData?['apellido'] ?? ''}'
+            .trim();
+        final vendedorFoto = userData?['foto_perfil'] as String? ?? '';
 
         final docRef = db.collection('products').doc();
         final productId = docRef.id;
 
         final List<String> fotosUrls = [];
         for (final photo in _newPhotos) {
-          final url =
-              await storageService.uploadProductPhoto(photo, productId);
-          if (url != null) fotosUrls.add(url);
+          final url = await storageService.uploadProductPhoto(photo, productId);
+          fotosUrls.add(url);
         }
 
         await docRef.set({
@@ -175,7 +166,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
           'fotos': fotosUrls,
           'vendedor_id': uid,
           'vendedor_nombre':
-              vendedorNombre.isEmpty ? 'Vendedor' : vendedorNombre,
+          vendedorNombre.isEmpty ? 'Vendedor' : vendedorNombre,
+          'vendedor_foto': vendedorFoto,
           'created_at': FieldValue.serverTimestamp(),
           'activo': true,
         });
@@ -230,31 +222,31 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       ),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFFB5976A)))
+          child: CircularProgressIndicator(color: Color(0xFFB5976A)))
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildPhotoSection(),
-                  const SizedBox(height: 20),
-                  _buildField('Nombre', _nombreController,
-                      hint: 'Ej: Chaqueta de cuero negra'),
-                  const SizedBox(height: 14),
-                  _buildField('Descripción', _descripcionController,
-                      hint: 'Cuéntanos sobre la prenda...', maxLines: 4),
-                  const SizedBox(height: 14),
-                  _buildField('Precio (COP)', _precioController,
-                      hint: 'Ej: 85000',
-                      keyboardType: TextInputType.number),
-                  const SizedBox(height: 20),
-                  _buildCategorySelector(),
-                  const SizedBox(height: 20),
-                  _buildSizeSelector(),
-                  const SizedBox(height: 32),
-                ],
-              ),
-            ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildPhotoSection(),
+            const SizedBox(height: 20),
+            _buildField('Nombre', _nombreController,
+                hint: 'Ej: Chaqueta de cuero negra'),
+            const SizedBox(height: 14),
+            _buildField('Descripción', _descripcionController,
+                hint: 'Cuéntanos sobre la prenda...', maxLines: 4),
+            const SizedBox(height: 14),
+            _buildField('Precio (COP)', _precioController,
+                hint: 'Ej: 85000',
+                keyboardType: TextInputType.number),
+            const SizedBox(height: 20),
+            _buildCategorySelector(),
+            const SizedBox(height: 20),
+            _buildSizeSelector(),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
     );
   }
 
@@ -376,7 +368,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
   Widget _buildField(String label, TextEditingController controller,
       {String hint = '', int maxLines = 1,
-      TextInputType keyboardType = TextInputType.text}) {
+        TextInputType keyboardType = TextInputType.text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

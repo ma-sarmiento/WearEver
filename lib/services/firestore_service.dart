@@ -32,6 +32,23 @@ class FirestoreService {
     await _db.collection('users').doc(uid).update({field: value});
   }
 
+  /// Actualiza vendedor_foto en todos los productos del usuario actual.
+  /// Llamar justo después de actualizar foto_perfil.
+  Future<void> updateVendorPhotoInProducts(String newPhotoUrl) async {
+    final uid = _uid;
+    if (uid == null) return;
+    final snap = await _db
+        .collection('products')
+        .where('vendedor_id', isEqualTo: uid)
+        .get();
+    if (snap.docs.isEmpty) return;
+    final batch = _db.batch();
+    for (final doc in snap.docs) {
+      batch.update(doc.reference, {'vendedor_foto': newPhotoUrl});
+    }
+    await batch.commit();
+  }
+
   Stream<Map<String, dynamic>?> getUserStream() {
     final uid = _uid;
     if (uid == null) return const Stream.empty();
@@ -55,7 +72,7 @@ class FirestoreService {
       if (userDoc.exists) {
         final data = userDoc.data()!;
         final nombre =
-            '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+        '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
         if (nombre.isNotEmpty) return nombre;
         return data['username'] as String? ?? 'Usuario';
       }
@@ -375,6 +392,25 @@ class FirestoreService {
     await _db.collection('users').doc(uid).collection('addresses').doc(addressId).delete();
   }
 
+  Future<void> updateAddress(String addressId, Map<String, dynamic> data) async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _db.collection('users').doc(uid).collection('addresses').doc(addressId).update(data);
+  }
+
+  Future<void> cancelOrder(String orderId) async {
+    final uid = _uid;
+    if (uid == null) throw Exception('Usuario no autenticado');
+    final doc = await _db.collection('orders').doc(orderId).get();
+    if (!doc.exists) throw Exception('Pedido no encontrado');
+    final estado = doc.data()?['estado'] as String? ?? '';
+    if (estado != 'Pendiente') {
+      throw Exception('Solo se pueden cancelar pedidos en estado Pendiente');
+    }
+    // Se elimina directamente — no queda rastro en la lista
+    await _db.collection('orders').doc(orderId).delete();
+  }
+
   // ─────────────────────────────────────────────
   // CHATS (mensajes entre usuarios)
   // ─────────────────────────────────────────────
@@ -397,21 +433,21 @@ class FirestoreService {
         .map((snap) {
       final docs = snap.docs
           .map((d) => {'id': d.id, ...d.data()})
-          // Filtrar chats que el usuario ocultó
-          // PERO si llegó un mensaje nuevo después de ocultarlo, volver a mostrarlo
+      // Filtrar chats que el usuario ocultó
+      // PERO si llegó un mensaje nuevo después de ocultarlo, volver a mostrarlo
           .where((chat) {
-            final hiddenFor = List<String>.from(chat['hidden_for'] ?? []);
-            if (!hiddenFor.contains(uid)) return true;
-            // Si hay mensajes después de que se ocultó, mostrar de nuevo
-            // Para simplicidad: si last_message no está vacío y hidden_for contiene uid,
-            // comparar con cuando se ocultó. Usamos un approach simple:
-            // el chat se vuelve visible si el otro usuario envió algo después.
-            // Guardamos hidden_at_last_message para comparar.
-            final hiddenAtMsg = chat['hidden_at_last_message'] as String?;
-            final lastMsg = chat['last_message'] as String? ?? '';
-            if (hiddenAtMsg != null && lastMsg != hiddenAtMsg) return true;
-            return false;
-          })
+        final hiddenFor = List<String>.from(chat['hidden_for'] ?? []);
+        if (!hiddenFor.contains(uid)) return true;
+        // Si hay mensajes después de que se ocultó, mostrar de nuevo
+        // Para simplicidad: si last_message no está vacío y hidden_for contiene uid,
+        // comparar con cuando se ocultó. Usamos un approach simple:
+        // el chat se vuelve visible si el otro usuario envió algo después.
+        // Guardamos hidden_at_last_message para comparar.
+        final hiddenAtMsg = chat['hidden_at_last_message'] as String?;
+        final lastMsg = chat['last_message'] as String? ?? '';
+        if (hiddenAtMsg != null && lastMsg != hiddenAtMsg) return true;
+        return false;
+      })
           .toList();
 
       docs.sort((a, b) {
@@ -433,14 +469,29 @@ class FirestoreService {
   }
 
   Stream<List<Map<String, dynamic>>> getMessagesStream(String otherUid) {
+    final uid = _uid;
     final chatId = _chatId(otherUid);
-    return _db
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .orderBy('sent_at', descending: false)
-        .snapshots()
-        .map((snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+
+    // Primero leemos el documento del chat para obtener deleted_at del usuario actual
+    return _db.collection('chats').doc(chatId).snapshots().asyncExpand((chatSnap) {
+      final data = chatSnap.data();
+      final deletedAt = data?['deleted_at_$uid']; // Timestamp o null
+
+      var query = _db
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('sent_at', descending: false);
+
+      // Si el usuario borró el chat, solo mostrar mensajes posteriores al borrado
+      if (deletedAt != null) {
+        query = query.where('sent_at', isGreaterThan: deletedAt);
+      }
+
+      return query.snapshots().map(
+            (snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList(),
+      );
+    });
   }
 
   Future<void> sendMessage({
@@ -473,8 +524,11 @@ class FirestoreService {
         'last_message': text,
         'last_message_at': FieldValue.serverTimestamp(),
         'unread_$otherUid': FieldValue.increment(1),
-        'hidden_for': [],           // reaparecer para ambos al recibir mensaje nuevo
+        // Solo quitar al remitente de hidden_for — el receptor sigue oculto si él lo eliminó
+        'hidden_for': FieldValue.arrayRemove([uid]),
         'hidden_at_last_message': '',
+        // Limpiar el deleted_at del remitente para que vea mensajes desde ahora
+        'deleted_at_$uid': FieldValue.delete(),
       },
       SetOptions(merge: true),
     );
@@ -560,18 +614,23 @@ class FirestoreService {
         .set({'unread_$uid': 0}, SetOptions(merge: true));
   }
 
-  // NUEVO: Eliminar un chat completo (documento + subcolección de mensajes)
-  // Ocultar un chat solo para el usuario actual (no lo elimina para el otro)
+  // Ocultar el chat para el usuario actual y guardar el momento del borrado.
+  // Los mensajes anteriores quedan en Firestore para el otro usuario,
+  // pero el que borró solo verá mensajes posteriores a este timestamp.
   Future<void> deleteChat(String chatId) async {
     final uid = _uid;
     if (uid == null) return;
-    // Obtener el último mensaje para saber desde cuándo está oculto
-    final chatDoc = await _db.collection('chats').doc(chatId).get();
+    final chatRef = _db.collection('chats').doc(chatId);
+
+    final chatDoc = await chatRef.get();
     final lastMsg = chatDoc.data()?['last_message'] as String? ?? '';
-    await _db.collection('chats').doc(chatId).set(
+
+    await chatRef.set(
       {
         'hidden_for': FieldValue.arrayUnion([uid]),
         'hidden_at_last_message': lastMsg,
+        // Guardar cuándo borró este usuario — usado para filtrar mensajes
+        'deleted_at_$uid': FieldValue.serverTimestamp(),
       },
       SetOptions(merge: true),
     );
@@ -583,7 +642,7 @@ class FirestoreService {
 
   Stream<List<Map<String, dynamic>>> getONGsStream() {
     return _db.collection('ongs').snapshots().map(
-        (snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+            (snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
   }
 
   Future<Map<String, dynamic>?> getONGById(String ongId) async {
