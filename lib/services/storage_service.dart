@@ -61,4 +61,18 @@ class StorageService {
       throw Exception('Error inesperado al subir imagen: $e');
     }
   }
+
+  Future<String> uploadOngPostPhoto(File imageFile, String storageId) async {
+    final filename = DateTime.now().millisecondsSinceEpoch.toString();
+    final ref = _storage.ref().child('ong_posts/$storageId/$filename.jpg');
+    try {
+      final task = await ref.putFile(
+        imageFile,
+        SettableMetadata(contentType: 'image/jpeg'),
+      );
+      return await task.ref.getDownloadURL();
+    } on FirebaseException catch (e) {
+      throw Exception('Error subiendo foto: ${e.message}');
+    }
+  }
 }

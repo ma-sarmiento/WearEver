@@ -816,4 +816,55 @@ class FirestoreService {
     await _db.collection('users').doc(uid).collection('settings').doc('prefs')
         .set(settings, SetOptions(merge: true));
   }
+
+  // ─────────────────────────────────────────────
+  // ONG POSTS
+  // ─────────────────────────────────────────────
+
+  Future<String> getCurrentUserType() async {
+    final uid = _uid;
+    if (uid == null) return 'usuario';
+    final userDoc = await _db.collection('users').doc(uid).get();
+    if (userDoc.exists) return (userDoc.data()?['tipo'] as String?) ?? 'usuario';
+    final ongDoc = await _db.collection('ongs').doc(uid).get();
+    if (ongDoc.exists) return 'ong';
+    return 'usuario';
+  }
+
+  Stream<List<Map<String, dynamic>>> getOngPostsStream({String? ongId}) {
+    if (ongId != null) {
+      return _db
+          .collection('ong_posts')
+          .where('ong_id', isEqualTo: ongId)
+          .snapshots()
+          .map((snap) {
+        final docs =
+            snap.docs.map((d) => {'id': d.id, ...d.data()}).toList();
+        docs.sort((a, b) {
+          final aTs = a['created_at'];
+          final bTs = b['created_at'];
+          if (aTs == null) return 1;
+          if (bTs == null) return -1;
+          return (bTs as Timestamp).compareTo(aTs as Timestamp);
+        });
+        return docs;
+      });
+    }
+    return _db
+        .collection('ong_posts')
+        .orderBy('created_at', descending: true)
+        .snapshots()
+        .map((snap) =>
+            snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+  }
+
+  Future<void> createOngPost(Map<String, dynamic> post) async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _db.collection('ong_posts').add({
+      ...post,
+      'ong_id': uid,
+      'created_at': FieldValue.serverTimestamp(),
+    });
+  }
 }
