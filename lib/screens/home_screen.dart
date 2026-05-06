@@ -14,6 +14,18 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showAiBubble = true;
   final Set<String> _pressedCards = {};
   final _firestoreService = FirestoreService();
+  String? _userTipo;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserType();
+  }
+
+  Future<void> _loadUserType() async {
+    final tipo = await _firestoreService.getCurrentUserType();
+    if (mounted) setState(() => _userTipo = tipo);
+  }
 
   String _formatPrice(double price) {
     return price
@@ -94,7 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         IconButton(
           icon: const Icon(Icons.add_circle_outline, color: Color(0xFFB5976A)),
-          onPressed: () => Navigator.pushNamed(context, '/create-product'),
+          onPressed: () {
+            if (_userTipo == 'ong') {
+              Navigator.pushNamed(context, '/create-ong-post');
+            } else {
+              Navigator.pushNamed(context, '/create-product');
+            }
+          },
           tooltip: 'Publicar',
         ),
         StreamBuilder<List<Map<String, dynamic>>>(
