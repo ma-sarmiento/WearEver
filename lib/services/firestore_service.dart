@@ -534,6 +534,29 @@ class FirestoreService {
     );
 
     await batch.commit();
+
+    // Write notification for recipient
+    try {
+      String remitenteNombre = 'Usuario';
+      final userDoc = await _db.collection('users').doc(uid).get();
+      if (userDoc.exists) {
+        final d = userDoc.data()!;
+        final n = '${d['nombre'] ?? ''} ${d['apellido'] ?? ''}'.trim();
+        remitenteNombre =
+            n.isNotEmpty ? n : (d['username'] as String? ?? 'Usuario');
+      }
+      final preview =
+          text.length > 60 ? '${text.substring(0, 60)}...' : text;
+      await _db.collection('notifications').add({
+        'tipo': 'nuevo_mensaje',
+        'destinatario_uid': otherUid,
+        'remitente_uid': uid,
+        'remitente_nombre': remitenteNombre,
+        'preview': preview,
+        'leido': false,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+    } catch (_) {}
   }
 
   // NUEVO: Editar un mensaje propio
