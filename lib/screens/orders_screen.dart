@@ -191,7 +191,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
               children: [
                 Icon(Icons.receipt_long_outlined,
                     size: 64,
-                    color: const Color(0xFFB5976A).withOpacity(0.3)),
+                    color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                 const SizedBox(height: 16),
                 Text(
                   _selectedFilter == 'Todos'
@@ -238,7 +238,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFB5976A).withOpacity(0.07),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.07),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -264,7 +264,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: _statusColor(estado).withOpacity(0.1),
+                        color: _statusColor(estado).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -285,10 +285,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFD32F2F).withOpacity(0.08),
+                            color: const Color(0xFFD32F2F).withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                                color: const Color(0xFFD32F2F).withOpacity(0.3)),
+                                color: const Color(0xFFD32F2F).withValues(alpha: 0.3)),
                           ),
                           child: const Text(
                             'Cancelar',

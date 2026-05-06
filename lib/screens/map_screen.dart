@@ -231,7 +231,7 @@ class _MapScreenState extends State<MapScreen>
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black.withOpacity(0.12), blurRadius: 8)
+                      color: Colors.black.withValues(alpha: 0.12), blurRadius: 8)
                 ],
               ),
               child: Row(children: [
@@ -265,7 +265,7 @@ class _MapScreenState extends State<MapScreen>
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 6)],
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 6)],
                     ),
                     child: const Row(children: [
                       SizedBox(width: 16, height: 16,
@@ -281,7 +281,7 @@ class _MapScreenState extends State<MapScreen>
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 6)],
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 6)],
                     ),
                     child: Row(children: [
                       const Icon(Icons.location_on, color: Color(0xFFB5976A), size: 18),
@@ -303,7 +303,7 @@ class _MapScreenState extends State<MapScreen>
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFB5976A),
                     foregroundColor: Colors.white,
-                    disabledBackgroundColor: const Color(0xFFB5976A).withOpacity(0.4),
+                    disabledBackgroundColor: const Color(0xFFB5976A).withValues(alpha: 0.4),
                     elevation: 0,
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
@@ -432,7 +432,7 @@ class _MapScreenState extends State<MapScreen>
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-                color: const Color(0xFFB5976A).withOpacity(0.07),
+                color: const Color(0xFFB5976A).withValues(alpha: 0.07),
                 blurRadius: 8,
                 offset: const Offset(0, 3))
           ],
@@ -441,7 +441,7 @@ class _MapScreenState extends State<MapScreen>
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10)),
             child: Icon(icon, color: color, size: 20),
           ),

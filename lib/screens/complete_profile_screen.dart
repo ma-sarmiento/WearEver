@@ -166,7 +166,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen>
                           boxShadow: [
                             BoxShadow(
                                 color:
-                                const Color(0xFFB5976A).withOpacity(0.25),
+                                const Color(0xFFB5976A).withValues(alpha: 0.25),
                                 blurRadius: 14,
                                 offset: const Offset(0, 5)),
                           ],
@@ -225,12 +225,12 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen>
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                            color: const Color(0xFFB5976A).withOpacity(0.2)),
+                            color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                            color: const Color(0xFFB5976A).withOpacity(0.2)),
+                            color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -284,7 +284,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen>
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFB5976A),
                         disabledBackgroundColor:
-                        const Color(0xFFB5976A).withOpacity(0.35),
+                        const Color(0xFFB5976A).withValues(alpha: 0.35),
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(

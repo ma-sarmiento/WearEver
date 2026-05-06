@@ -151,7 +151,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
-                boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 3))],
+                boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 3))],
               ),
               child: Row(children: [
                 Container(
@@ -177,7 +177,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFB5976A).withOpacity(0.1),
+                      color: const Color(0xFFB5976A).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text('Copiar ID', style: TextStyle(fontSize: 11, color: Color(0xFFB5976A), fontWeight: FontWeight.w500)),
@@ -192,7 +192,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
-                  boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 3))],
+                  boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 3))],
                 ),
                 child: Row(children: [
                   Container(
@@ -222,7 +222,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
-                boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.08), blurRadius: 8)],
+                boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.08), blurRadius: 8)],
               ),
               child: Column(children: [
                 ...List<Map<String, dynamic>>.from(_order?['items'] ?? []).map((item) =>
@@ -270,7 +270,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               Expanded(child: OutlinedButton(
                 onPressed: () => Navigator.pushNamed(context, '/orders'),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: const Color(0xFFB5976A).withOpacity(0.5)),
+                  side: BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.5)),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),

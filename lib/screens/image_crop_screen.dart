@@ -184,7 +184,7 @@ class _CropOverlayPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.black.withOpacity(0.58);
+    final paint = Paint()..color = Colors.black.withValues(alpha: 0.58);
     final center = Offset(size.width / 2, size.height / 2);
 
     // Agujero con even-odd fill rule
@@ -199,7 +199,7 @@ class _CropOverlayPainter extends CustomPainter {
       center,
       cropRadius,
       Paint()
-        ..color = Colors.white.withOpacity(0.75)
+        ..color = Colors.white.withValues(alpha: 0.75)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5,
     );

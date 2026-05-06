@@ -105,7 +105,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                       children: [
                         Icon(Icons.chat_bubble_outline,
                             size: 64,
-                            color: const Color(0xFFB5976A).withOpacity(0.3)),
+                            color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                         const SizedBox(height: 16),
                         const Text(
                           'Aún no tienes conversaciones',
@@ -398,7 +398,7 @@ class _ChatTileState extends State<_ChatTile> {
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
         decoration: BoxDecoration(
           color: widget.isSelected
-              ? const Color(0xFFB5976A).withOpacity(0.08)
+              ? const Color(0xFFB5976A).withValues(alpha: 0.08)
               : Colors.transparent,
           border: const Border(
             bottom: BorderSide(color: Color(0xFFEEE4D8), width: 0.5),
@@ -433,7 +433,7 @@ class _ChatTileState extends State<_ChatTile> {
             // Avatar
             CircleAvatar(
               radius: 24,
-              backgroundColor: const Color(0xFFB5976A).withOpacity(0.15),
+              backgroundColor: const Color(0xFFB5976A).withValues(alpha: 0.15),
               backgroundImage: (!_loading && _photoUrl.isNotEmpty)
                   ? NetworkImage(_photoUrl)
                   : null,

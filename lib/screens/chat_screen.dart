@@ -231,7 +231,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildEditingBanner() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: const Color(0xFFB5976A).withOpacity(0.12),
+      color: const Color(0xFFB5976A).withValues(alpha: 0.12),
       child: Row(
         children: [
           const Icon(Icons.edit, size: 16, color: Color(0xFFB5976A)),
@@ -258,7 +258,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Container(
             width: 38, height: 38,
             decoration: BoxDecoration(
-              color: _isAiChat ? const Color(0xFF3D3025) : const Color(0xFFB5976A).withOpacity(0.15),
+              color: _isAiChat ? const Color(0xFF3D3025) : const Color(0xFFB5976A).withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Center(
@@ -368,7 +368,7 @@ class _ChatScreenState extends State<ChatScreen> {
               bottomRight: Radius.circular(isUser ? 4 : 16),
             ),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
             ],
           ),
           child: Column(
@@ -389,7 +389,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     if (isEdited) ...[
                       Text('editado',
                           style: TextStyle(
-                            color: isUser ? Colors.white.withOpacity(0.6) : const Color(0xFFB0A090),
+                            color: isUser ? Colors.white.withValues(alpha: 0.6) : const Color(0xFFB0A090),
                             fontSize: 10, fontStyle: FontStyle.italic,
                           )),
                       const SizedBox(width: 4),
@@ -397,7 +397,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     if (time.isNotEmpty)
                       Text(time,
                           style: TextStyle(
-                            color: isUser ? Colors.white.withOpacity(0.7) : const Color(0xFFB0A090),
+                            color: isUser ? Colors.white.withValues(alpha: 0.7) : const Color(0xFFB0A090),
                             fontSize: 10,
                           )),
                   ],

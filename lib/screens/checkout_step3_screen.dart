@@ -198,7 +198,7 @@ class _CheckoutStep3ScreenState extends State<CheckoutStep3Screen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 3))],
       ),
       child: Row(children: [
         ClipRRect(
@@ -234,7 +234,7 @@ class _CheckoutStep3ScreenState extends State<CheckoutStep3Screen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.07), blurRadius: 6, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.07), blurRadius: 6, offset: const Offset(0, 2))],
       ),
       child: child,
     );
@@ -246,7 +246,7 @@ class _CheckoutStep3ScreenState extends State<CheckoutStep3Screen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.07), blurRadius: 8, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.07), blurRadius: 8, offset: const Offset(0, 3))],
       ),
       child: Column(children: [
         _summaryRow('Subtotal', _formatPrice(_subtotal)),

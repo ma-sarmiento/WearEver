@@ -135,7 +135,7 @@ class _RegisterOngScreenState extends State<RegisterOngScreen>
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFB5976A).withOpacity(0.3),
+                        color: const Color(0xFFB5976A).withValues(alpha: 0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -236,12 +236,12 @@ class _RegisterOngScreenState extends State<RegisterOngScreen>
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                        color: const Color(0xFFB5976A).withOpacity(0.2)),
+                        color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                        color: const Color(0xFFB5976A).withOpacity(0.2)),
+                        color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -319,7 +319,7 @@ class _RegisterOngScreenState extends State<RegisterOngScreen>
                   onPressed: () => Navigator.pop(context),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                        color: const Color(0xFFB5976A).withOpacity(0.5)),
+                        color: const Color(0xFFB5976A).withValues(alpha: 0.5)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -372,12 +372,12 @@ class _RegisterOngScreenState extends State<RegisterOngScreen>
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-              BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+              BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-              BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+              BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -414,12 +414,12 @@ class _RegisterOngScreenState extends State<RegisterOngScreen>
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-              BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+              BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-              BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+              BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

@@ -359,7 +359,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                 children: [
                   Icon(Icons.location_off_outlined,
                       size: 64,
-                      color: const Color(0xFFB5976A).withOpacity(0.3)),
+                      color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                   const SizedBox(height: 16),
                   const Text(
                     'No tienes direcciones guardadas',
@@ -402,7 +402,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
             : null,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFB5976A).withOpacity(0.07),
+            color: const Color(0xFFB5976A).withValues(alpha: 0.07),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -414,7 +414,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
             width: 42,
             height: 42,
             decoration: BoxDecoration(
-              color: const Color(0xFFB5976A).withOpacity(0.1),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(Icons.location_on_outlined,
@@ -441,7 +441,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFB5976A).withOpacity(0.15),
+                          color: const Color(0xFFB5976A).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Text(
@@ -512,7 +512,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: const Color(0xFFB5976A).withOpacity(0.4),
+            color: const Color(0xFFB5976A).withValues(alpha: 0.4),
             style: BorderStyle.solid,
           ),
         ),

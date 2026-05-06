@@ -157,7 +157,7 @@ class _MySalesScreenState extends State<MySalesScreen> {
 
               if (orders.isEmpty) {
                 return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Icon(Icons.storefront_outlined, size: 60, color: const Color(0xFFB5976A).withOpacity(0.3)),
+                  Icon(Icons.storefront_outlined, size: 60, color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                   const SizedBox(height: 16),
                   Text(
                     _selectedFilter == 'Todos' ? 'Aún no tienes ventas' : 'No hay pedidos "$_selectedFilter"',
@@ -194,7 +194,7 @@ class _MySalesScreenState extends State<MySalesScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.08), blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.08), blurRadius: 10, offset: const Offset(0, 3))],
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Header
@@ -210,9 +210,9 @@ class _MySalesScreenState extends State<MySalesScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: _statusColor(estado).withOpacity(0.1),
+                  color: _statusColor(estado).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: _statusColor(estado).withOpacity(0.3)),
+                  border: Border.all(color: _statusColor(estado).withValues(alpha: 0.3)),
                 ),
                 child: Text(estado, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: _statusColor(estado))),
               ),

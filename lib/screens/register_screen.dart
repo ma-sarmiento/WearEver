@@ -143,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFB5976A).withOpacity(0.3),
+                              color: const Color(0xFFB5976A).withValues(alpha: 0.3),
                               blurRadius: 12,
                               offset: const Offset(0, 4),
                             ),
@@ -259,18 +259,18 @@ class _RegisterScreenState extends State<RegisterScreen>
                 Row(children: [
                   Expanded(
                       child: Divider(
-                          color: const Color(0xFFB5976A).withOpacity(0.3),
+                          color: const Color(0xFFB5976A).withValues(alpha: 0.3),
                           thickness: 1)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text('o regístrate con',
                         style: TextStyle(
                             fontSize: 12,
-                            color: const Color(0xFF9A8A75).withOpacity(0.8))),
+                            color: const Color(0xFF9A8A75).withValues(alpha: 0.8))),
                   ),
                   Expanded(
                       child: Divider(
-                          color: const Color(0xFFB5976A).withOpacity(0.3),
+                          color: const Color(0xFFB5976A).withValues(alpha: 0.3),
                           thickness: 1)),
                 ]),
                 const SizedBox(height: 16),
@@ -283,7 +283,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.white,
                       side: BorderSide(
-                          color: const Color(0xFFB5976A).withOpacity(0.3)),
+                          color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                     ),
@@ -376,12 +376,12 @@ class _RegisterScreenState extends State<RegisterScreen>
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-          BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+          BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-          BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+          BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -415,12 +415,12 @@ class _RegisterScreenState extends State<RegisterScreen>
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-          BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+          BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide:
-          BorderSide(color: const Color(0xFFB5976A).withOpacity(0.2)),
+          BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

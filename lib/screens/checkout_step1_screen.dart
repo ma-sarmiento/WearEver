@@ -146,7 +146,7 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFB5976A).withOpacity(0.1),
+                              color: const Color(0xFFB5976A).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Text('Cambiar',
@@ -205,7 +205,7 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: const Color(0xFFB5976A), width: 1.5),
-        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 3))],
       ),
       child: Row(children: [
         const Icon(Icons.location_on_outlined, color: Color(0xFFB5976A), size: 20),
@@ -232,7 +232,7 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFB5976A).withOpacity(0.4), style: BorderStyle.solid),
+          border: Border.all(color: const Color(0xFFB5976A).withValues(alpha: 0.4), style: BorderStyle.solid),
         ),
         child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Icon(Icons.add_location_outlined, color: Color(0xFFB5976A), size: 20),
@@ -287,7 +287,7 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, -3))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, -3))],
       ),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -324,7 +324,7 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
               backgroundColor: const Color(0xFFB5976A),
               foregroundColor: Colors.white,
               elevation: 0,
-              disabledBackgroundColor: const Color(0xFFB5976A).withOpacity(0.4),
+              disabledBackgroundColor: const Color(0xFFB5976A).withValues(alpha: 0.4),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             ),
             child: const Text('Continuar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),

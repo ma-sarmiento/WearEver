@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen>
                           boxShadow: [
                             BoxShadow(
                                 color:
-                                const Color(0xFFB5976A).withOpacity(0.2),
+                                const Color(0xFFB5976A).withValues(alpha: 0.2),
                                 blurRadius: 16,
                                 offset: const Offset(0, 6)),
                           ],
@@ -210,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen>
                   // Toggle Usuario / ONG
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8D5C4).withOpacity(0.4),
+                      color: const Color(0xFFE8D5C4).withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.all(4),
@@ -296,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen>
                     Row(children: [
                       Expanded(
                           child: Divider(
-                              color: const Color(0xFFB5976A).withOpacity(0.3),
+                              color: const Color(0xFFB5976A).withValues(alpha: 0.3),
                               thickness: 1)),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -304,11 +304,11 @@ class _LoginScreenState extends State<LoginScreen>
                             style: TextStyle(
                                 fontSize: 12,
                                 color: const Color(0xFF9A8A75)
-                                    .withOpacity(0.8))),
+                                    .withValues(alpha: 0.8))),
                       ),
                       Expanded(
                           child: Divider(
-                              color: const Color(0xFFB5976A).withOpacity(0.3),
+                              color: const Color(0xFFB5976A).withValues(alpha: 0.3),
                               thickness: 1)),
                     ]),
                     const SizedBox(height: 16),
@@ -321,7 +321,7 @@ class _LoginScreenState extends State<LoginScreen>
                         style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.white,
                           side: BorderSide(
-                              color: const Color(0xFFB5976A).withOpacity(0.3)),
+                              color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14)),
                         ),
@@ -364,7 +364,7 @@ class _LoginScreenState extends State<LoginScreen>
                           context, _isOng ? '/register-ong' : '/register'),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
-                            color: const Color(0xFFB5976A).withOpacity(0.5)),
+                            color: const Color(0xFFB5976A).withValues(alpha: 0.5)),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14)),
                       ),
@@ -401,7 +401,7 @@ class _LoginScreenState extends State<LoginScreen>
             boxShadow: isActive
                 ? [
               BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: Colors.black.withValues(alpha: 0.06),
                   blurRadius: 6,
                   offset: const Offset(0, 2))
             ]

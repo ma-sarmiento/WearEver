@@ -145,7 +145,7 @@ class _StyleSelectorScreenState extends State<StyleSelectorScreen>
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFB5976A),
                       disabledBackgroundColor:
-                      const Color(0xFFB5976A).withOpacity(0.4),
+                      const Color(0xFFB5976A).withValues(alpha: 0.4),
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -193,8 +193,8 @@ class _StyleSelectorScreenState extends State<StyleSelectorScreen>
           boxShadow: [
             BoxShadow(
               color: isSelected
-                  ? const Color(0xFFB5976A).withOpacity(0.3)
-                  : Colors.black.withOpacity(0.04),
+                  ? const Color(0xFFB5976A).withValues(alpha: 0.3)
+                  : Colors.black.withValues(alpha: 0.04),
               blurRadius: isSelected ? 12 : 6,
               offset: const Offset(0, 3),
             ),

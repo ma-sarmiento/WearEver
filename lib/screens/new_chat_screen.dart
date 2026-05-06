@@ -191,7 +191,7 @@ class _NewChatScreenState extends State<NewChatScreen> {
                             Icon(Icons.search_off,
                                 size: 56,
                                 color: const Color(0xFFB5976A)
-                                    .withOpacity(0.3)),
+                                    .withValues(alpha: 0.3)),
                             const SizedBox(height: 12),
                             Text(
                               _query.isEmpty
@@ -283,7 +283,7 @@ class _UserRow extends StatelessWidget {
               radius: 22,
               backgroundColor: isOng
                   ? const Color(0xFFE8D5C4)
-                  : const Color(0xFFB5976A).withOpacity(0.15),
+                  : const Color(0xFFB5976A).withValues(alpha: 0.15),
               backgroundImage:
                   foto.isNotEmpty ? NetworkImage(foto) : null,
               child: foto.isEmpty

@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () => Navigator.pushNamed(context, '/profile'),
                 child: CircleAvatar(
                   radius: 16,
-                  backgroundColor: const Color(0xFFB5976A).withOpacity(0.15),
+                  backgroundColor: const Color(0xFFB5976A).withValues(alpha: 0.15),
                   backgroundImage:
                   fotoUrl.isNotEmpty ? NetworkImage(fotoUrl) : null,
                   child: fotoUrl.isEmpty
@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(Icons.checkroom_outlined,
                           size: 64,
-                          color: const Color(0xFFB5976A).withOpacity(0.3)),
+                          color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                       const SizedBox(height: 16),
                       const Text(
                         'Sé el primero en publicar 👗',
@@ -248,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.pushNamed(context, '/explore'),
                 style: TextButton.styleFrom(
                   backgroundColor:
-                  const Color(0xFFB5976A).withOpacity(0.3),
+                  const Color(0xFFB5976A).withValues(alpha: 0.3),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   padding: const EdgeInsets.symmetric(
@@ -299,7 +299,7 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFB5976A).withOpacity(0.1),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -492,7 +492,7 @@ class _HomeScreenState extends State<HomeScreen> {
       color: const Color(0xFFE8D5C4),
       child: Center(
         child: Icon(Icons.checkroom,
-            size: 60, color: const Color(0xFFB5976A).withOpacity(0.3)),
+            size: 60, color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
       ),
     );
   }

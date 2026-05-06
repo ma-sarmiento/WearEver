@@ -51,7 +51,7 @@ class OngScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.volunteer_activism,
                       size: 64,
-                      color: const Color(0xFFB5976A).withOpacity(0.3)),
+                      color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                   const SizedBox(height: 16),
                   const Text(
                     'Aún no hay fundaciones registradas',
@@ -116,7 +116,7 @@ class _OngCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFB5976A).withOpacity(0.08),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.08),
               blurRadius: 10,
               offset: const Offset(0, 3),
             ),
@@ -132,7 +132,7 @@ class _OngCard extends StatelessWidget {
                 color: const Color(0xFFE8D5C4),
                 shape: BoxShape.circle,
                 border: Border.all(
-                    color: const Color(0xFFB5976A).withOpacity(0.3), width: 2),
+                    color: const Color(0xFFB5976A).withValues(alpha: 0.3), width: 2),
               ),
               child: const Center(
                 child: Icon(Icons.volunteer_activism,
@@ -311,8 +311,8 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
               height: 130,
               decoration: BoxDecoration(
                 gradient: LinearGradient(colors: [
-                  const Color(0xFF8B7355).withOpacity(0.6),
-                  const Color(0xFF6B5B45).withOpacity(0.4),
+                  const Color(0xFF8B7355).withValues(alpha: 0.6),
+                  const Color(0xFF6B5B45).withValues(alpha: 0.4),
                 ]),
               ),
             ),
@@ -333,7 +333,7 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
                       border: Border.all(color: Colors.white, width: 3),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
+                            color: Colors.black.withValues(alpha: 0.15),
                             blurRadius: 8),
                       ],
                     ),
@@ -418,7 +418,7 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha: 0.08),
                                 blurRadius: 4),
                           ],
                         ),
@@ -436,7 +436,7 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha: 0.08),
                                 blurRadius: 4),
                           ],
                         ),
@@ -462,7 +462,7 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-              color: const Color(0xFFB5976A).withOpacity(0.08),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.08),
               blurRadius: 10,
               offset: const Offset(0, 3)),
         ],
@@ -530,7 +530,7 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-              color: const Color(0xFFB5976A).withOpacity(0.08),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.08),
               blurRadius: 10,
               offset: const Offset(0, 3)),
         ],
@@ -686,7 +686,7 @@ class _FollowListScreenState extends State<_FollowListScreen> {
                         CircleAvatar(
                           radius: 22,
                           backgroundColor:
-                              const Color(0xFFB5976A).withOpacity(0.15),
+                              const Color(0xFFB5976A).withValues(alpha: 0.15),
                           child: Text(initial,
                               style: const TextStyle(
                                   color: Color(0xFFB5976A),

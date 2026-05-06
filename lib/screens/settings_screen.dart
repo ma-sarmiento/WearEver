@@ -213,7 +213,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _card(List<Widget> children) => Container(
     decoration: BoxDecoration(
       color: Colors.white, borderRadius: BorderRadius.circular(14),
-      boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.07), blurRadius: 8, offset: const Offset(0, 3))],
+      boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.07), blurRadius: 8, offset: const Offset(0, 3))],
     ),
     child: Column(children: children),
   );

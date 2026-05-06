@@ -45,7 +45,7 @@ class SavedScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.bookmark_border,
                       size: 72,
-                      color: const Color(0xFFB5976A).withOpacity(0.3)),
+                      color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                   const SizedBox(height: 16),
                   const Text(
                     'Aún no tienes guardados',
@@ -99,7 +99,7 @@ class SavedScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFB5976A).withOpacity(0.07),
+                        color: const Color(0xFFB5976A).withValues(alpha: 0.07),
                         blurRadius: 8,
                         offset: const Offset(0, 3),
                       ),
@@ -174,7 +174,7 @@ class SavedScreen extends StatelessWidget {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
+                                    color: Colors.black.withValues(alpha: 0.1),
                                     blurRadius: 4),
                               ],
                             ),
@@ -202,7 +202,7 @@ class SavedScreen extends StatelessWidget {
         child: Icon(
           Icons.checkroom,
           size: 48,
-          color: const Color(0xFFB5976A).withOpacity(0.4),
+          color: const Color(0xFFB5976A).withValues(alpha: 0.4),
         ),
       ),
     );

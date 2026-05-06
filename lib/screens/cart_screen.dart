@@ -98,7 +98,7 @@ class CartScreen extends StatelessWidget {
         children: [
           Icon(Icons.shopping_bag_outlined,
               size: 72,
-              color: const Color(0xFFB5976A).withOpacity(0.3)),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           const Text(
             'Tu carrito está vacío',
@@ -138,7 +138,7 @@ class CartScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-              color: const Color(0xFFB5976A).withOpacity(0.07),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.07),
               blurRadius: 8,
               offset: const Offset(0, 3)),
         ],
@@ -246,7 +246,7 @@ class CartScreen extends StatelessWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.07),
+              color: Colors.black.withValues(alpha: 0.07),
               blurRadius: 12,
               offset: const Offset(0, -3)),
         ],
@@ -307,7 +307,7 @@ class CartScreen extends StatelessWidget {
       color: const Color(0xFFE8D5C4),
       child: Center(
         child: Icon(Icons.checkroom,
-            color: const Color(0xFFB5976A).withOpacity(0.4)),
+            color: const Color(0xFFB5976A).withValues(alpha: 0.4)),
       ),
     );
   }

@@ -106,7 +106,7 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen>
       child: Container(
         width: 80, height: 80,
         decoration: BoxDecoration(
-          color: const Color(0xFF4CAF50).withOpacity(0.12),
+          color: const Color(0xFF4CAF50).withValues(alpha: 0.12),
           shape: BoxShape.circle,
           border: Border.all(color: const Color(0xFF4CAF50), width: 2),
         ),
@@ -129,7 +129,7 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.08), blurRadius: 10, offset: const Offset(0, 3))],
+        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.08), blurRadius: 10, offset: const Offset(0, 3))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +213,7 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen>
       child: OutlinedButton(
         onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: const Color(0xFFB5976A).withOpacity(0.5)),
+          side: BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.5)),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
         child: const Text('Seguir comprando',

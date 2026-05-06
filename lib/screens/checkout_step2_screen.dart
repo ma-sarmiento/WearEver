@@ -165,7 +165,7 @@ class _CheckoutStep2ScreenState extends State<CheckoutStep2Screen> {
           color: isSelected ? const Color(0xFFB5976A) : const Color(0xFFE0D0BC),
           width: isSelected ? 2 : 1,
         ),
-        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.06), blurRadius: 6, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.06), blurRadius: 6, offset: const Offset(0, 2))],
       ),
       child: Column(
         children: [
@@ -200,9 +200,9 @@ class _CheckoutStep2ScreenState extends State<CheckoutStep2Screen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: badgeColor.withOpacity(0.1),
+                    color: badgeColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: badgeColor.withOpacity(0.3)),
+                    border: Border.all(color: badgeColor.withValues(alpha: 0.3)),
                   ),
                   child: Text(badge, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: badgeColor)),
                 ),
@@ -296,7 +296,7 @@ class _CheckoutStep2ScreenState extends State<CheckoutStep2Screen> {
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, -3))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, -3))],
       ),
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -317,7 +317,7 @@ class _CheckoutStep2ScreenState extends State<CheckoutStep2Screen> {
               backgroundColor: const Color(0xFFB5976A),
               foregroundColor: Colors.white,
               elevation: 0,
-              disabledBackgroundColor: const Color(0xFFB5976A).withOpacity(0.4),
+              disabledBackgroundColor: const Color(0xFFB5976A).withValues(alpha: 0.4),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             ),
             child: Text(

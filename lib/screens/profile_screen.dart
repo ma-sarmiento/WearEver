@@ -180,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         boxShadow: [
                           BoxShadow(
                               color:
-                              const Color(0xFFB5976A).withOpacity(0.25),
+                              const Color(0xFFB5976A).withValues(alpha: 0.25),
                               blurRadius: 14,
                               offset: const Offset(0, 5))
                         ],
@@ -247,7 +247,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-                color: const Color(0xFFB5976A).withOpacity(0.08),
+                color: const Color(0xFFB5976A).withValues(alpha: 0.08),
                 blurRadius: 10,
                 offset: const Offset(0, 3))
           ],
@@ -305,7 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-                color: const Color(0xFFB5976A).withOpacity(0.08),
+                color: const Color(0xFFB5976A).withValues(alpha: 0.08),
                 blurRadius: 10,
                 offset: const Offset(0, 3))
           ],
@@ -330,7 +330,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
                             color:
-                            const Color(0xFFB5976A).withOpacity(0.12),
+                            const Color(0xFFB5976A).withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(8)),
                         child: const Row(children: [
                           Icon(Icons.edit_outlined,
@@ -357,7 +357,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(
                       border: Border.all(
                           color: const Color(0xFFB5976A)
-                              .withOpacity(0.3)),
+                              .withValues(alpha: 0.3)),
                       borderRadius: BorderRadius.circular(10)),
                   child: const Center(
                     child: Text('+ Seleccionar estilos',
@@ -377,11 +377,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: const Color(0xFFB5976A)
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                         color: const Color(0xFFB5976A)
-                            .withOpacity(0.3)),
+                            .withValues(alpha: 0.3)),
                   ),
                   child: Text(style,
                       style: const TextStyle(
@@ -450,7 +450,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-                color: const Color(0xFFB5976A).withOpacity(0.08),
+                color: const Color(0xFFB5976A).withValues(alpha: 0.08),
                 blurRadius: 10,
                 offset: const Offset(0, 3))
           ],
@@ -491,7 +491,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Icon(Icons.chevron_right,
                         size: 18,
                         color: isDanger
-                            ? const Color(0xFFD32F2F).withOpacity(0.5)
+                            ? const Color(0xFFD32F2F).withValues(alpha: 0.5)
                             : const Color(0xFFB0A090)),
                   ]),
                 ),

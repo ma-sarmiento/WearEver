@@ -155,7 +155,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                 Expanded(
                   child: _cards.isEmpty
                       ? Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                          Icon(Icons.credit_card_off_outlined, size: 56, color: const Color(0xFFB5976A).withOpacity(0.3)),
+                          Icon(Icons.credit_card_off_outlined, size: 56, color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                           const SizedBox(height: 12),
                           const Text('No tienes tarjetas guardadas', style: TextStyle(color: Color(0xFF9A8A75), fontSize: 14)),
                         ]))
@@ -168,7 +168,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 color: Colors.white, borderRadius: BorderRadius.circular(14),
-                                boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 3))],
+                                boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 3))],
                               ),
                               child: Row(children: [
                                 Container(
@@ -225,7 +225,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(14),
-          boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.07), blurRadius: 8)],
+          boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.07), blurRadius: 8)],
         ),
         child: Column(children: [
           if (pseBank.isNotEmpty) _methodRow('PSE', 'Banco: $pseBank', const Color(0xFF00A651)),
@@ -241,7 +241,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
     return Row(children: [
       Container(
         width: 40, height: 40,
-        decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
         child: Center(child: Text(name, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold))),
       ),
       const SizedBox(width: 12),

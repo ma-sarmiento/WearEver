@@ -112,7 +112,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
                     children: [
                       Icon(Icons.people_outline,
                           size: 64,
-                          color: const Color(0xFFB5976A).withOpacity(0.3)),
+                          color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                       const SizedBox(height: 16),
                       Text(
                         _mode == 'followers'
@@ -219,7 +219,7 @@ class _UserTileState extends State<_UserTile> {
             // Avatar
             CircleAvatar(
               radius: 24,
-              backgroundColor: const Color(0xFFB5976A).withOpacity(0.15),
+              backgroundColor: const Color(0xFFB5976A).withValues(alpha: 0.15),
               backgroundImage: foto.isNotEmpty ? NetworkImage(foto) : null,
               child: foto.isEmpty
                   ? Text(initial,

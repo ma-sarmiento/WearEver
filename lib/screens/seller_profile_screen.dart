@@ -130,7 +130,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
               // Avatar
               CircleAvatar(
                 radius: 42,
-                backgroundColor: const Color(0xFFB5976A).withOpacity(0.15),
+                backgroundColor: const Color(0xFFB5976A).withValues(alpha: 0.15),
                 backgroundImage: fotoUrl.isNotEmpty ? NetworkImage(fotoUrl) : null,
                 child: fotoUrl.isEmpty
                     ? Text(initial, style: const TextStyle(
@@ -267,7 +267,7 @@ class _SellerProfileScreenState extends State<SellerProfileScreen> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(14),
-          boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withOpacity(0.07),
+          boxShadow: [BoxShadow(color: const Color(0xFFB5976A).withValues(alpha: 0.07),
               blurRadius: 8, offset: const Offset(0, 3))],
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

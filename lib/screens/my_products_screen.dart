@@ -41,7 +41,7 @@ class MyProductsScreen extends StatelessWidget {
           if (products.isEmpty) {
             return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Icon(Icons.storefront_outlined, size: 64,
-                  color: const Color(0xFFB5976A).withOpacity(0.3)),
+                  color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
               const SizedBox(height: 16),
               const Text('Aún no has publicado nada',
                   style: TextStyle(color: Color(0xFF9A8A75), fontSize: 15)),
@@ -82,7 +82,7 @@ class MyProductsScreen extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [BoxShadow(
-              color: const Color(0xFFB5976A).withOpacity(0.07),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.07),
               blurRadius: 8, offset: const Offset(0, 3))],
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -110,9 +110,9 @@ class MyProductsScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       shape: BoxShape.circle,
-                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)],
+                      boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4)],
                     ),
                     child: const Icon(Icons.edit_outlined, size: 14, color: Color(0xFFB5976A)),
                   ),

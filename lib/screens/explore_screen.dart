@@ -195,7 +195,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               children: [
                 Icon(Icons.search_off,
                     size: 64,
-                    color: const Color(0xFFB5976A).withOpacity(0.3)),
+                    color: const Color(0xFFB5976A).withValues(alpha: 0.3)),
                 const SizedBox(height: 16),
                 Text(
                   _searchQuery.isNotEmpty
@@ -240,7 +240,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFB5976A).withOpacity(0.07),
+              color: const Color(0xFFB5976A).withValues(alpha: 0.07),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -306,7 +306,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       color: const Color(0xFFE8D5C4),
       child: Center(
         child: Icon(Icons.checkroom,
-            size: 48, color: const Color(0xFFB5976A).withOpacity(0.4)),
+            size: 48, color: const Color(0xFFB5976A).withValues(alpha: 0.4)),
       ),
     );
   }
