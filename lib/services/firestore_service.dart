@@ -844,6 +844,17 @@ class FirestoreService {
   // ONG POSTS
   // ─────────────────────────────────────────────
 
+  Stream<int> getUnreadNotificationsCount() {
+    final uid = _uid;
+    if (uid == null) return const Stream.empty();
+    return _db
+        .collection('notifications')
+        .where('destinatario_uid', isEqualTo: uid)
+        .snapshots()
+        .map((snap) =>
+            snap.docs.where((d) => d.data()['leido'] != true).length);
+  }
+
   Future<String> getCurrentUserType() async {
     final uid = _uid;
     if (uid == null) return 'usuario';

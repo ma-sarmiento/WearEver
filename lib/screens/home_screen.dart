@@ -115,6 +115,46 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           tooltip: 'Publicar',
         ),
+        StreamBuilder<int>(
+          stream: _firestoreService.getUnreadNotificationsCount(),
+          builder: (context, snapshot) {
+            final unread = snapshot.data ?? 0;
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.notifications_outlined,
+                      color: Color(0xFF4A3F30)),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, '/notifications'),
+                ),
+                if (unread > 0)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD32F2F),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          unread > 9 ? '9+' : '$unread',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
         StreamBuilder<List<Map<String, dynamic>>>(
           stream: _firestoreService.getCartStream(),
           builder: (context, snapshot) {
