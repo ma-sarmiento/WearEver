@@ -16,14 +16,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
   final List<String> _filters = [
     'Todos',
     'Pendiente',
-    'Alistando',
+    'Preparando',
     'Enviado',
     'Entregado',
   ];
 
   Color _statusColor(String estado) {
     switch (estado) {
-      case 'Alistando':
+      case 'Preparando':
         return const Color(0xFFE8A000);
       case 'Enviado':
         return const Color(0xFF4CAF50);

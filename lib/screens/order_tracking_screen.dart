@@ -15,7 +15,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   bool _loading = true;
 
   // Mapeo de estado a paso
-  static const _statusSteps = ['Pendiente', 'Alistando', 'Enviado', 'Entregado'];
+  static const _statusSteps = ['Pendiente', 'Preparando', 'Enviado', 'Entregado'];
 
   int get _currentStep {
     final estado = _order?['estado'] as String? ?? 'Pendiente';
@@ -300,7 +300,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   }
 
   Widget _buildProgressBar(String estado) {
-    final steps = ['Confirmado', 'Alistando', 'Enviado', 'Entregado'];
+    final steps = ['Confirmado', 'Preparando', 'Enviado', 'Entregado'];
     return Row(
       children: steps.asMap().entries.map((e) {
         final i = e.key;
@@ -344,7 +344,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   String _statusDescription(String estado) {
     switch (estado) {
       case 'Pendiente': return 'Pedido recibido, esperando confirmación';
-      case 'Alistando': return 'El vendedor está alistando tu pedido';
+      case 'Preparando': return 'El vendedor está preparando tu pedido';
       case 'Enviado': return 'Tu pedido está en camino';
       case 'Entregado': return '¡Tu pedido fue entregado!';
 
