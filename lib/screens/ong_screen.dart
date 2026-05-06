@@ -288,6 +288,8 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
                   _buildStats(),
                   const SizedBox(height: 16),
                   _buildInfoCard(),
+                  const SizedBox(height: 16),
+                  _buildPostsSection(),
                 ],
               ),
             ),
@@ -521,6 +523,191 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
 
   Widget _buildDivider() =>
       Container(width: 1, height: 40, color: const Color(0xFFE8D5C4));
+
+  String _formatPostDate(dynamic ts) {
+    if (ts == null) return '';
+    try {
+      final dt = (ts as Timestamp).toDate();
+      return '${dt.day}/${dt.month}/${dt.year}';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  Widget _buildPostsSection() {
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: _firestoreService.getOngPostsStream(ongId: widget.ongId),
+      builder: (context, snapshot) {
+        final posts = snapshot.data ?? [];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Publicaciones',
+              style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF4A3F30)),
+            ),
+            const SizedBox(height: 10),
+            if (snapshot.connectionState == ConnectionState.waiting)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: CircularProgressIndicator(
+                      color: Color(0xFFB5976A), strokeWidth: 2),
+                ),
+              )
+            else if (posts.isEmpty)
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Aún no hay publicaciones',
+                    style:
+                        TextStyle(color: Color(0xFF9A8A75), fontSize: 13),
+                  ),
+                ),
+              )
+            else
+              ...posts.map((post) => _buildPostCard(post)),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildPostCard(Map<String, dynamic> post) {
+    final titulo = post['titulo'] as String? ?? '';
+    final tipos = List<String>.from(post['tipos_ropa'] ?? []);
+    final ciudad = post['ciudad'] as String? ?? '';
+    final cantidad = post['cantidad'] as String? ?? '';
+    final fechaLimite = _formatPostDate(post['fecha_limite']);
+    final descripcion = post['descripcion'] as String? ?? '';
+    final fotos = List<String>.from(post['fotos'] ?? []);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFB5976A).withValues(alpha: 0.07),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (fotos.isNotEmpty)
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(14)),
+              child: Image.network(
+                fotos.first,
+                height: 160,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  titulo,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF4A3F30),
+                  ),
+                ),
+                if (tipos.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: tipos
+                        .map((t) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFB5976A)
+                                    .withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(t,
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Color(0xFF8B7355),
+                                      fontWeight: FontWeight.w500)),
+                            ))
+                        .toList(),
+                  ),
+                ],
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    if (ciudad.isNotEmpty) ...[
+                      const Icon(Icons.location_on_outlined,
+                          size: 13, color: Color(0xFFB5976A)),
+                      const SizedBox(width: 3),
+                      Text(ciudad,
+                          style: const TextStyle(
+                              fontSize: 12, color: Color(0xFF9A8A75))),
+                    ],
+                    if (ciudad.isNotEmpty && cantidad.isNotEmpty)
+                      const Text('  •  ',
+                          style: TextStyle(
+                              color: Color(0xFFD4C4A8), fontSize: 12)),
+                    if (cantidad.isNotEmpty)
+                      Text('$cantidad prendas',
+                          style: const TextStyle(
+                              fontSize: 12, color: Color(0xFF9A8A75))),
+                  ],
+                ),
+                if (fechaLimite.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today_outlined,
+                          size: 13, color: Color(0xFFB5976A)),
+                      const SizedBox(width: 3),
+                      Text('Límite: $fechaLimite',
+                          style: const TextStyle(
+                              fontSize: 12, color: Color(0xFF9A8A75))),
+                    ],
+                  ),
+                ],
+                if (descripcion.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    descripcion,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF5A4E40),
+                        height: 1.4),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildInfoCard() {
     return Container(
