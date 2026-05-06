@@ -137,12 +137,24 @@ class _FollowersScreenState extends State<FollowersScreen> {
                         if (user['uid'] == _currentUid) {
                           Navigator.pushNamed(context, '/profile');
                         } else if (user['tipo'] == 'ong') {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (_) => OngDetailScreen(
-                              ongId: user['uid'],
-                              ongData: {'nombre_fundacion': user['nombre'], 'ciudad': user['username']},
-                            ),
-                          ));
+                          _firestoreService
+                              .getONGById(user['uid'] as String)
+                              .then((ongData) {
+                            if (!context.mounted) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => OngDetailScreen(
+                                  ongId: user['uid'] as String,
+                                  ongData: ongData ??
+                                      {
+                                        'nombre_fundacion': user['nombre'],
+                                        'ciudad': user['username'],
+                                      },
+                                ),
+                              ),
+                            );
+                          });
                         } else {
                           Navigator.pushNamed(
                             context,
