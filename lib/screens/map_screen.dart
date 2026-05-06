@@ -32,9 +32,6 @@ class _MapScreenState extends State<MapScreen>
 
   List<Map<String, dynamic>> _ongs = [];
 
-  // Optional: center on a specific ONG passed as argument
-  String? _focusOngName;
-
   static const _disposalPoints = [
     {'name': 'Contenedor Verde', 'address': 'C.C. Andino, Cl. 82 #11-37', 'lat': 4.6677, 'lng': -74.0535},
     {'name': 'Punto Verde', 'address': 'Parque 93, Cl. 93A #11A-28', 'lat': 4.6766, 'lng': -74.0483},
@@ -57,7 +54,6 @@ class _MapScreenState extends State<MapScreen>
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map) {
       _isPicking = args['mode'] == 'pick';
-      _focusOngName = args['ong_name'] as String?;
     }
   }
 

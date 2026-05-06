@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/bottom_nav.dart';
-import '../widgets/smart_back_button.dart';
 import '../services/firestore_service.dart';
 
 // ─────────────────────────────────────────────────────────────

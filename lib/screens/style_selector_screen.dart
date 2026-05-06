@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/smart_back_button.dart';
 import '../services/firestore_service.dart';
 
 class StyleSelectorScreen extends StatefulWidget {

@@ -12,7 +12,6 @@ class _CheckoutStep2ScreenState extends State<CheckoutStep2Screen> {
   final _firestoreService = FirestoreService();
   String _selectedPayment = 'contraentrega';
   Map<String, dynamic> _checkoutData = {};
-  Map<String, dynamic>? _savedPaymentData;
   bool _loadingPayment = true;
 
   // PSE controllers
@@ -38,7 +37,6 @@ class _CheckoutStep2ScreenState extends State<CheckoutStep2Screen> {
     final data = await _firestoreService.getPaymentData();
     if (mounted) {
       setState(() {
-        _savedPaymentData = data;
         if (data != null) {
           _bankCtrl.text = data['pse_banco'] as String? ?? '';
           _nequiNameCtrl.text = data['nequi_nombre'] as String? ?? '';
@@ -67,13 +65,6 @@ class _CheckoutStep2ScreenState extends State<CheckoutStep2Screen> {
       'nequi_numero': _nequiCtrl.text.trim(),
     });
     if (mounted) {
-      setState(() {
-        _savedPaymentData = {
-          'pse_banco': _bankCtrl.text.trim(),
-          'nequi_nombre': _nequiNameCtrl.text.trim(),
-          'nequi_numero': _nequiCtrl.text.trim(),
-        };
-      });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Datos guardados ✓'),
