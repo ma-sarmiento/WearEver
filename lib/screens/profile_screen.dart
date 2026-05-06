@@ -97,8 +97,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _openFollowList(String mode) {
-    Navigator.pushNamed(context, '/followers',
-        arguments: {'mode': mode, 'uid': _currentUid});
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _FollowListSheet(
+        uid: _currentUid,
+        mode: mode,
+        firestoreService: _firestoreService,
+      ),
+    );
   }
 
   @override
@@ -503,6 +511,185 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     indent: 52),
             ]);
           }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class _FollowListSheet extends StatefulWidget {
+  final String uid;
+  final String mode;
+  final FirestoreService firestoreService;
+
+  const _FollowListSheet({
+    required this.uid,
+    required this.mode,
+    required this.firestoreService,
+  });
+
+  @override
+  State<_FollowListSheet> createState() => _FollowListSheetState();
+}
+
+class _FollowListSheetState extends State<_FollowListSheet> {
+  bool _loading = true;
+  List<Map<String, dynamic>> _users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final uids = await widget.firestoreService
+        .getFollowList(uid: widget.uid, mode: widget.mode);
+    final users = <Map<String, dynamic>>[];
+    for (final uid in uids) {
+      final data = await widget.firestoreService.getUserById(uid);
+      if (data != null) {
+        final nombre =
+            '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+        users.add({
+          'uid': uid,
+          'nombre': nombre.isNotEmpty ? nombre : (data['username'] ?? 'Usuario'),
+          'username': data['username'] as String? ?? '',
+          'foto': data['foto_perfil'] as String? ?? '',
+        });
+      }
+    }
+    if (mounted) setState(() { _users = users; _loading = false; });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final title = widget.mode == 'followers' ? 'Seguidores' : 'Siguiendo';
+    return DraggableScrollableSheet(
+      initialChildSize: 0.6,
+      minChildSize: 0.4,
+      maxChildSize: 0.9,
+      builder: (_, controller) => Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFF5EFE6),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 4),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFD4C4A8),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF4A3F30),
+                ),
+              ),
+            ),
+            const Divider(height: 1, color: Color(0xFFE8D5C4)),
+            Expanded(
+              child: _loading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                          color: Color(0xFFB5976A)))
+                  : _users.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.people_outline,
+                                  size: 48,
+                                  color: const Color(0xFFB5976A)
+                                      .withValues(alpha: 0.3)),
+                              const SizedBox(height: 12),
+                              Text(
+                                widget.mode == 'followers'
+                                    ? 'Aún no tienes seguidores'
+                                    : 'Aún no sigues a nadie',
+                                style: const TextStyle(
+                                    color: Color(0xFF9A8A75),
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          controller: controller,
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: _users.length,
+                          itemBuilder: (_, i) {
+                            final u = _users[i];
+                            final nombre = u['nombre'] as String;
+                            final username = u['username'] as String;
+                            final foto = u['foto'] as String;
+                            final initial = nombre.isNotEmpty
+                                ? nombre[0].toUpperCase()
+                                : '?';
+                            return Container(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12),
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                      color: Color(0xFFEEE4D8),
+                                      width: 0.5),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 22,
+                                    backgroundColor: const Color(0xFFB5976A)
+                                        .withValues(alpha: 0.15),
+                                    backgroundImage: foto.isNotEmpty
+                                        ? NetworkImage(foto)
+                                        : null,
+                                    child: foto.isEmpty
+                                        ? Text(initial,
+                                            style: const TextStyle(
+                                              color: Color(0xFFB5976A),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ))
+                                        : null,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(nombre,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(0xFF4A3F30),
+                                          )),
+                                      if (username.isNotEmpty)
+                                        Text('@$username',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF9A8A75),
+                                            )),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+            ),
+          ],
         ),
       ),
     );
