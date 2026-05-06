@@ -256,21 +256,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       title: const Text(
         'Publicación',
         style: TextStyle(
-          color: Color(0xFF4A3F30),
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+            color: Color(0xFF4A3F30), fontSize: 16, fontWeight: FontWeight.w600),
       ),
       centerTitle: true,
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           children: [
-            // Imagen principal
             fotos.isNotEmpty
                 ? PageView.builder(
               itemCount: fotos.length,
-              onPageChanged: (i) =>
-                  setState(() => _currentImage = i),
+              onPageChanged: (i) => setState(() => _currentImage = i),
               itemBuilder: (context, i) => Image.network(
                 fotos[i],
                 fit: BoxFit.cover,
@@ -293,7 +288,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     color: const Color(0xFFB5976A).withOpacity(0.3)),
               ),
             ),
-            // Vendedor overlay
             Positioned(
               top: 90,
               left: 16,
@@ -346,7 +340,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ],
               ),
             ),
-            // Dots de imágenes
             if (fotos.length > 1)
               Positioned(
                 bottom: 12,
@@ -356,7 +349,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     fotos.length,
-                        (i) => Container(
+                    (i) => Container(
                       margin: const EdgeInsets.symmetric(horizontal: 3),
                       width: _currentImage == i ? 16 : 7,
                       height: 7,
@@ -463,13 +456,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Talla',
-          style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF4A3F30)),
-        ),
+        const Text('Talla',
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF4A3F30))),
         const SizedBox(height: 8),
         Wrap(
           spacing: 10,
@@ -483,9 +474,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? const Color(0xFFB5976A)
-                      : Colors.white,
+                  color: isSelected ? const Color(0xFFB5976A) : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: isSelected
@@ -493,16 +482,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         : const Color(0xFFE0D0BC),
                   ),
                 ),
-                child: Text(
-                  size,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: isSelected
-                        ? Colors.white
-                        : const Color(0xFF7A6A55),
-                  ),
-                ),
+                child: Text(size,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: isSelected
+                          ? Colors.white
+                          : const Color(0xFF7A6A55),
+                    )),
               ),
             );
           }).toList(),
@@ -566,14 +553,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: isActive
-              ? const Color(0xFFB5976A).withOpacity(0.1)
-              : Colors.white,
+          color:
+              isActive ? const Color(0xFFB5976A).withOpacity(0.1) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isActive
-                ? const Color(0xFFB5976A)
-                : const Color(0xFFE0D0BC),
+            color:
+                isActive ? const Color(0xFFB5976A) : const Color(0xFFE0D0BC),
           ),
         ),
         child: Icon(icon,
@@ -646,7 +631,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             CreateProductScreen(product: _product),
                       ),
                     );
-                    // Recargar datos actualizados desde Firestore
                     final productId = _product?['id'] as String?;
                     if (productId != null && mounted) {
                       final updated = await _firestoreService
@@ -714,8 +698,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             backgroundColor: const Color(0xFFB5976A),
             foregroundColor: Colors.white,
             elevation: 0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
             padding: const EdgeInsets.symmetric(vertical: 14),
           ),
           child: const Text(
@@ -748,7 +732,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Encabezado con promedio
           StreamBuilder<Map<String, dynamic>>(
             stream: _firestoreService.getReviewsSummaryStream(productId),
             builder: (context, snapshot) {
@@ -782,8 +765,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             },
           ),
           const SizedBox(height: 14),
-
-          // Formulario para escribir reseña (solo si no es el dueño)
           if (!isOwner) ...[
             const Text('Tu calificación',
                 style: TextStyle(
@@ -860,8 +841,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             const Divider(color: Color(0xFFF0E6D4)),
             const SizedBox(height: 8),
           ],
-
-          // Lista de reseñas
           StreamBuilder<List<Map<String, dynamic>>>(
             stream: _firestoreService.getReviewsStream(productId),
             builder: (context, snapshot) {
@@ -944,7 +923,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Row(
                   children: List.generate(
                     5,
-                        (i) => Icon(
+                    (i) => Icon(
                       i < rating
                           ? Icons.star_rounded
                           : Icons.star_outline_rounded,
