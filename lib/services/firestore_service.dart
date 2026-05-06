@@ -101,6 +101,19 @@ class FirestoreService {
     final followerRef = _db.collection('users').doc(targetUid).collection('followers').doc(uid);
     batch.set(followerRef, {'followed_at': FieldValue.serverTimestamp()});
     await batch.commit();
+
+    try {
+      final nombre = await getUserDisplayName(uid);
+      await _db.collection('notifications').add({
+        'tipo': 'nuevo_seguidor',
+        'destinatario_uid': targetUid,
+        'remitente_uid': uid,
+        'remitente_nombre': nombre,
+        'preview': 'empezó a seguirte',
+        'leido': false,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+    } catch (_) {}
   }
 
   Future<void> unfollowUser(String targetUid) async {
@@ -900,5 +913,48 @@ class FirestoreService {
       'ong_id': uid,
       'created_at': FieldValue.serverTimestamp(),
     });
+
+    try {
+      final ongNombre = post['ong_nombre'] as String? ?? 'ONG';
+      final titulo = post['titulo'] as String? ?? 'Nueva publicación';
+      final seguidores = await getFollowList(uid: uid, mode: 'followers');
+      if (seguidores.isNotEmpty) {
+        final notifBatch = _db.batch();
+        for (final seguidorUid in seguidores) {
+          final notifRef = _db.collection('notifications').doc();
+          notifBatch.set(notifRef, {
+            'tipo': 'nueva_donacion',
+            'destinatario_uid': seguidorUid,
+            'remitente_uid': uid,
+            'remitente_nombre': ongNombre,
+            'preview': titulo,
+            'leido': false,
+            'created_at': FieldValue.serverTimestamp(),
+          });
+        }
+        await notifBatch.commit();
+      }
+    } catch (_) {}
+  }
+
+  Future<void> updateOrderStatus(String orderId, String newStatus) async {
+    final uid = _uid;
+    if (uid == null) return;
+    await _db.collection('orders').doc(orderId).update({'estado': newStatus});
+    try {
+      final vendedorNombre = await getUserDisplayName(uid);
+      final orderDoc = await _db.collection('orders').doc(orderId).get();
+      final compradorId = orderDoc.data()?['comprador_id'] as String? ?? '';
+      if (compradorId.isEmpty) return;
+      await _db.collection('notifications').add({
+        'tipo': 'pedido_actualizado',
+        'destinatario_uid': compradorId,
+        'remitente_uid': uid,
+        'remitente_nombre': vendedorNombre,
+        'preview': 'Tu pedido está ahora en estado: $newStatus',
+        'leido': false,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+    } catch (_) {}
   }
 }

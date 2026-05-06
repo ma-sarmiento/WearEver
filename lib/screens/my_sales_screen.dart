@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../services/firestore_service.dart';
 
 class MySalesScreen extends StatefulWidget {
   const MySalesScreen({super.key});
@@ -11,6 +12,7 @@ class MySalesScreen extends StatefulWidget {
 class _MySalesScreenState extends State<MySalesScreen> {
   final _db = FirebaseFirestore.instance;
   final _uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+  final _firestoreService = FirestoreService();
   String _selectedFilter = 'Todos';
 
   static const _filters = ['Todos', 'Pendiente', 'Preparando', 'Enviado', 'Entregado'];
@@ -78,7 +80,7 @@ class _MySalesScreenState extends State<MySalesScreen> {
     );
 
     if (confirmed == true) {
-      await _db.collection('orders').doc(orderId).update({'estado': next});
+      await _firestoreService.updateOrderStatus(orderId, next);
     }
   }
 
