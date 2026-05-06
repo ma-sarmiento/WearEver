@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'services/notification_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -36,6 +38,15 @@ import 'screens/create_ong_post_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+  final notifService = NotificationService();
+  await notifService.initialize();
+  await notifService.requestPermission();
+  await notifService.getToken();
+  notifService.setupForegroundHandler();
+
   final user = FirebaseAuth.instance.currentUser;
   runApp(RevisteApp(initialRoute: user != null ? '/home' : '/'));
 }
