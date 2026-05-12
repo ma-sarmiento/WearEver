@@ -140,8 +140,25 @@ class _CheckoutStep3ScreenState extends State<CheckoutStep3Screen> {
                   _buildInfoCard(child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(direccion?['direccion'] as String? ?? 'Sin dirección',
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Color(0xFF4A3F30))),
+                      if (direccion != null) ...[
+                        Text(
+                          direccion['alias'] as String? ?? 'Mi dirección',
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF4A3F30)),
+                        ),
+                        if ((direccion['address'] as String? ?? '').isNotEmpty)
+                          Text(
+                            direccion['address'] as String,
+                            style: const TextStyle(fontSize: 12, color: Color(0xFF7A6A55)),
+                          ),
+                        if ((direccion['city'] as String? ?? '').isNotEmpty)
+                          Text(
+                            direccion['city'] as String,
+                            style: const TextStyle(fontSize: 12, color: Color(0xFF9A8A75)),
+                          ),
+                      ] else
+                        const Text('Sin dirección',
+                            style: TextStyle(fontSize: 13, color: Color(0xFF9A8A75))),
+                      const SizedBox(height: 4),
                       Text(shipping == 'express' ? 'Exprés (24–48 h)' : 'Estándar (3–5 días)',
                           style: const TextStyle(fontSize: 12, color: Color(0xFF9A8A75))),
                     ],

@@ -42,15 +42,22 @@ class _CheckoutStep1ScreenState extends State<CheckoutStep1Screen> {
   }
 
   Future<void> _loadAddresses() async {
-    final snap = await _firestoreService.getAddressesStream().first;
-    if (mounted) {
-      setState(() {
-        _addresses = snap;
-        final primary = snap.where((a) => a['is_primary'] == true).toList();
-        _selectedAddress = primary.isNotEmpty ? primary.first
-            : snap.isNotEmpty ? snap.first : null;
-        _loadingAddresses = false;
-      });
+    try {
+      final snap = await _firestoreService.getAddressesStream().first;
+      if (mounted) {
+        setState(() {
+          _addresses = snap;
+          final primary = snap.where((a) => a['is_primary'] == true).toList();
+          _selectedAddress = primary.isNotEmpty
+              ? primary.first
+              : snap.isNotEmpty
+                  ? snap.first
+                  : null;
+          _loadingAddresses = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loadingAddresses = false);
     }
   }
 
