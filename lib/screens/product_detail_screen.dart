@@ -18,6 +18,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool _addingToCart = false;
   bool _isOwner = false;
   bool _loadingStates = true;
+  bool _statesLoaded = false;
 
   // Reseñas
   int _myRating = 0;
@@ -30,9 +31,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (_statesLoaded) return;
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map<String, dynamic>) {
       _product = args;
+      _statesLoaded = true;
       _loadStates();
     }
   }
