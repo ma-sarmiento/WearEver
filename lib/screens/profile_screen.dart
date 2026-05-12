@@ -24,6 +24,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> _savedStyles = [];
   int _compras = 0, _ventas = 0, _seguidores = 0, _seguidos = 0;
   bool _loadingStats = true;
+  String _tipo = '';
+  String _nit = '';
+  String _ongDescripcion = '';
+  String _ciudad = '';
 
   @override
   void initState() {
@@ -33,13 +37,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
-    final data = await AuthService().getUserData();
-    if (mounted && data != null) {
+    try {
+      final data = await AuthService()
+          .getUserData()
+          .timeout(const Duration(seconds: 10));
+
+      if (data != null) {
+        final tipo = data['tipo'] as String? ?? '';
+
+        if (tipo == 'ong') {
+          final uid = FirebaseAuth.instance.currentUser?.uid ?? _currentUid;
+          final ongData = await _firestoreService.getONGById(uid);
+          if (mounted) {
+            setState(() {
+              _tipo = 'ong';
+              _nombre = ongData?['nombre_fundacion'] as String?
+                  ?? data['nombre_fundacion'] as String?
+                  ?? '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+              _username = data['email'] as String? ?? '';
+              _fotoPerfilUrl = data['foto_perfil'] as String? ?? '';
+              _nit = ongData?['nit'] as String? ?? '';
+              _ongDescripcion = ongData?['descripcion'] as String? ?? '';
+              _ciudad = ongData?['ciudad'] as String? ?? '';
+            });
+          }
+          return;
+        }
+
+        if (mounted) {
+          setState(() {
+            _nombre = '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+            _username = '@${data['username'] ?? ''}';
+            _fotoPerfilUrl = data['foto_perfil'] as String? ?? '';
+            _savedStyles = List<String>.from(data['gustos_estilos'] ?? []);
+          });
+        }
+        return;
+      }
+    } catch (_) {}
+
+    // Fallback 1: leer directamente desde Firestore users/{uid}
+    try {
+      final uid = FirebaseAuth.instance.currentUser?.uid ?? _currentUid;
+      final data = await _firestoreService.getUserById(uid);
+      if (data != null && mounted) {
+        setState(() {
+          _nombre = '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
+          _username = '@${data['username'] ?? ''}';
+          _fotoPerfilUrl = data['foto_perfil'] as String? ?? '';
+          _savedStyles = List<String>.from(data['gustos_estilos'] ?? []);
+        });
+        return;
+      }
+    } catch (_) {}
+
+    // Fallback 2: mostrar email del usuario
+    if (mounted) {
+      final email = FirebaseAuth.instance.currentUser?.email ?? '';
       setState(() {
-        _nombre = '${data['nombre'] ?? ''} ${data['apellido'] ?? ''}'.trim();
-        _username = '@${data['username'] ?? ''}';
-        _fotoPerfilUrl = data['foto_perfil'] as String? ?? '';
-        _savedStyles = List<String>.from(data['gustos_estilos'] ?? []);
+        _nombre = email.isNotEmpty ? email : 'Usuario';
+        _username = '';
       });
     }
   }
@@ -237,9 +294,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: Color(0xFF4A3F30)),
         ),
         const SizedBox(height: 2),
-        Text(_username,
-            style:
-            const TextStyle(fontSize: 13, color: Color(0xFF9A8A75))),
+        if (_tipo == 'ong') ...[
+          if (_ciudad.isNotEmpty)
+            Text(_ciudad,
+                style: const TextStyle(fontSize: 12, color: Color(0xFF9A8A75))),
+          if (_nit.isNotEmpty)
+            Text('NIT: $_nit',
+                style: const TextStyle(fontSize: 12, color: Color(0xFF9A8A75))),
+          if (_ongDescripcion.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+              child: Text(
+                _ongDescripcion,
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12, color: Color(0xFF7A6A55)),
+              ),
+            ),
+        ] else
+          Text(_username,
+              style: const TextStyle(fontSize: 13, color: Color(0xFF9A8A75))),
         const SizedBox(height: 8),
       ],
     );
