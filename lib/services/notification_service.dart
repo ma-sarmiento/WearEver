@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -11,26 +10,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class NotificationService {
-  static final _plugin = FlutterLocalNotificationsPlugin();
-  static const _channel = AndroidNotificationChannel(
-    'wearever_high',
-    'WearEver',
-    description: 'Mensajes, pedidos y seguidores',
-    importance: Importance.high,
-  );
-
   Future<void> initialize() async {
-    await _plugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(_channel);
-
-    await _plugin.initialize(
-      const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-        iOS: DarwinInitializationSettings(),
-      ),
-    );
+    // Notificaciones locales deshabilitadas — FCM maneja la visualización en background/terminated.
   }
 
   Future<void> requestPermission() async {
@@ -64,27 +45,12 @@ class NotificationService {
     } catch (_) {}
   }
 
-  /// Muestra una notificación local cuando la app está en primer plano.
+  /// En foreground FCM no muestra la notificación automáticamente.
+  /// Por ahora solo logueamos — se puede reactivar con flutter_local_notifications cuando se resuelva el conflicto de desugaring.
   void setupForegroundHandler() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      final notification = message.notification;
-      if (notification == null) return;
-      _plugin.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            _channel.id,
-            _channel.name,
-            channelDescription: _channel.description,
-            importance: Importance.high,
-            priority: Priority.high,
-            icon: '@mipmap/ic_launcher',
-          ),
-          iOS: const DarwinNotificationDetails(),
-        ),
-      );
+      debugPrint(
+          'FCM foreground: ${message.notification?.title} — ${message.notification?.body}');
     });
   }
 }
