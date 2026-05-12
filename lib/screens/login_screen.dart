@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -146,7 +147,10 @@ class _LoginScreenState extends State<LoginScreen>
       // loginOnly: true → lanza error si la cuenta no existe en Firestore
       await AuthService().signInWithGoogle(loginOnly: true);
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/home');
+      // Solo navegar si Firebase autenticó al usuario (el usuario no canceló)
+      if (FirebaseAuth.instance.currentUser != null) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
