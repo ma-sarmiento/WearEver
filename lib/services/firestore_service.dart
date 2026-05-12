@@ -557,6 +557,13 @@ class FirestoreService {
         final n = '${d['nombre'] ?? ''} ${d['apellido'] ?? ''}'.trim();
         remitenteNombre =
             n.isNotEmpty ? n : (d['username'] as String? ?? 'Usuario');
+      } else {
+        // Buscar en 'ongs' si no está en 'users' (ONGs autenticadas)
+        final ongDoc = await _db.collection('ongs').doc(uid).get();
+        if (ongDoc.exists) {
+          remitenteNombre =
+              ongDoc.data()?['nombre_fundacion'] as String? ?? 'ONG';
+        }
       }
       final preview =
           text.length > 60 ? '${text.substring(0, 60)}...' : text;
