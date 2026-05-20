@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/storage_service.dart';
-import '../services/gemini_service.dart';
+import '../services/ai_service.dart';
 
 class CreateProductScreen extends StatefulWidget {
   /// Si se pasa un producto existente, la pantalla funciona en modo edición.
@@ -84,7 +84,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
     try {
       final bytes = await file.readAsBytes();
       final base64Image = base64Encode(bytes);
-      final result = await GeminiService().scanPrenda(base64Image);
+      final result = await AiService().scanPrenda(base64Image);
       if (mounted) _showScanResultSheet(result);
     } catch (_) {
       // scan falla silenciosamente, el usuario puede publicar igual
