@@ -1,13 +1,13 @@
-# WearEver — Moda Circular
+# ♻️ WearEver: Moda Circular Inteligente
 
-Marketplace sostenible de moda de segunda mano desarrollado en **Flutter**, diseñado para mitigar el impacto ambiental de la industria textil en Colombia. Facilita la compra, venta y donación de prendas usadas, conectando usuarios con ONGs y puntos de recolección.
+Aplicación móvil multiplataforma desarrollada en **Flutter**, diseñada para mitigar el impacto ambiental de la industria textil en Colombia. Facilita la compra, venta, donación y reciclaje de prendas, integrando un sistema de puntos y recomendaciones inteligentes para fomentar la economía circular.
 
-**Problema que resuelve:** Colombia genera aprox. 160,000 toneladas de residuos textiles anuales que terminan en rellenos sanitarios como Doña Juana (Bogotá).
+Este proyecto nace como una solución a las **160,000 toneladas de residuos textiles** que terminan anualmente en el relleno sanitario Doña Juana de Bogotá.
 
 ---
+## 👥 Contribuidores
 
-## Equipo
-
+Este proyecto es desarrollado por estudiantes de Ingeniería de Sistemas:
 | Nombre | Rol                |
 |--------|--------------------|
 | Miguel Sarmiento | Desarrollo Flutter / Firebase |
