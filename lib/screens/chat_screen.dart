@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/bottom_nav.dart';
 import '../services/firestore_service.dart';
+import '../services/gemini_service.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -14,10 +15,12 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _msgController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final _firestoreService = FirestoreService();
+  final _geminiService = GeminiService();
   final _currentUid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   String? _otherUid;
   bool _isAiChat = false;
+  bool _isTitoTyping = false;
 
   String _otherName = 'Cargando...';
   String _otherInitial = '?';
@@ -102,9 +105,19 @@ class _ChatScreenState extends State<ChatScreen> {
     if (_isAiChat) {
       setState(() {
         _aiMessages.add({'isUser': true, 'text': text, 'time': _nowTime()});
-        _aiMessages.add({'isUser': false, 'text': 'Procesando tu consulta... ✨', 'time': _nowTime()});
+        _isTitoTyping = true;
       });
       _scrollToBottom();
+
+      final response = await _geminiService.chat(text);
+
+      if (mounted) {
+        setState(() {
+          _isTitoTyping = false;
+          _aiMessages.add({'isUser': false, 'text': response, 'time': _nowTime()});
+        });
+        _scrollToBottom();
+      }
     } else if (_otherUid != null) {
       await _firestoreService.sendMessage(otherUid: _otherUid!, text: text);
       _scrollToBottom();
@@ -286,11 +299,15 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildMessageList() {
     if (_isAiChat) {
+      final itemCount = _aiMessages.length + (_isTitoTyping ? 1 : 0);
       return ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        itemCount: _aiMessages.length,
+        itemCount: itemCount,
         itemBuilder: (context, index) {
+          if (_isTitoTyping && index == _aiMessages.length) {
+            return _buildTypingIndicator();
+          }
           final msg = _aiMessages[index];
           return _buildBubble(
             text: msg['text'] as String,
@@ -341,6 +358,38 @@ class _ChatScreenState extends State<ChatScreen> {
           },
         );
       },
+    );
+  }
+
+  Widget _buildTypingIndicator() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+            bottomLeft: Radius.circular(4),
+            bottomRight: Radius.circular(16),
+          ),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2)),
+          ],
+        ),
+        child: const Text(
+          'Tito está escribiendo...',
+          style: TextStyle(
+              color: Color(0xFF9A8A75),
+              fontSize: 13,
+              fontStyle: FontStyle.italic),
+        ),
+      ),
     );
   }
 
