@@ -40,6 +40,7 @@ import 'screens/notifications_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
+  debugPrint('OpenAI key loaded: ${dotenv.env['OPENAI_API_KEY']?.substring(0, 10)}...');
   await Firebase.initializeApp();
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
