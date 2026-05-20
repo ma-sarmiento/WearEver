@@ -583,13 +583,11 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
   }
 
   Widget _buildPostCard(Map<String, dynamic> post) {
+    final tipoPost = post['tipo_post'] as String? ?? 'donacion';
     final titulo = post['titulo'] as String? ?? '';
-    final tipos = List<String>.from(post['tipos_ropa'] ?? []);
-    final ciudad = post['ciudad'] as String? ?? '';
-    final cantidad = post['cantidad'] as String? ?? '';
-    final fechaLimite = _formatPostDate(post['fecha_limite']);
     final descripcion = post['descripcion'] as String? ?? '';
     final fotos = List<String>.from(post['fotos'] ?? []);
+    final ciudad = post['ciudad'] as String? ?? '';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -624,6 +622,8 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildPostTypeBadge(tipoPost),
+                const SizedBox(height: 8),
                 Text(
                   titulo,
                   style: const TextStyle(
@@ -632,80 +632,184 @@ class _OngDetailScreenState extends State<OngDetailScreen> {
                     color: Color(0xFF4A3F30),
                   ),
                 ),
-                if (tipos.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 4,
-                    children: tipos
-                        .map((t) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFB5976A)
-                                    .withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(t,
-                                  style: const TextStyle(
-                                      fontSize: 11,
-                                      color: Color(0xFF8B7355),
-                                      fontWeight: FontWeight.w500)),
-                            ))
-                        .toList(),
-                  ),
-                ],
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    if (ciudad.isNotEmpty) ...[
-                      const Icon(Icons.location_on_outlined,
-                          size: 13, color: Color(0xFFB5976A)),
-                      const SizedBox(width: 3),
-                      Text(ciudad,
-                          style: const TextStyle(
-                              fontSize: 12, color: Color(0xFF9A8A75))),
-                    ],
-                    if (ciudad.isNotEmpty && cantidad.isNotEmpty)
-                      const Text('  •  ',
-                          style: TextStyle(
-                              color: Color(0xFFD4C4A8), fontSize: 12)),
-                    if (cantidad.isNotEmpty)
-                      Text('$cantidad prendas',
-                          style: const TextStyle(
-                              fontSize: 12, color: Color(0xFF9A8A75))),
-                  ],
-                ),
-                if (fechaLimite.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.calendar_today_outlined,
-                          size: 13, color: Color(0xFFB5976A)),
-                      const SizedBox(width: 3),
-                      Text('Límite: $fechaLimite',
-                          style: const TextStyle(
-                              fontSize: 12, color: Color(0xFF9A8A75))),
-                    ],
-                  ),
-                ],
                 if (descripcion.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     descripcion,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF5A4E40),
-                        height: 1.4),
+                        fontSize: 13, color: Color(0xFF5A4E40), height: 1.4),
                   ),
+                ],
+                const SizedBox(height: 10),
+                if (tipoPost == 'donacion')
+                  _buildDonacionPostDetails(post)
+                else if (tipoPost == 'evento')
+                  _buildEventoPostDetails(post),
+                if (ciudad.isNotEmpty && tipoPost == 'campana') ...[
+                  Row(children: [
+                    const Icon(Icons.location_on_outlined,
+                        size: 13, color: Color(0xFFB5976A)),
+                    const SizedBox(width: 3),
+                    Text(ciudad,
+                        style: const TextStyle(
+                            fontSize: 12, color: Color(0xFF9A8A75))),
+                  ]),
                 ],
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPostTypeBadge(String tipoPost) {
+    final Map<String, Map<String, dynamic>> config = {
+      'donacion': {
+        'label': 'Donación',
+        'icon': Icons.volunteer_activism,
+        'color': const Color(0xFF6B9E78),
+      },
+      'evento': {
+        'label': 'Evento',
+        'icon': Icons.event,
+        'color': const Color(0xFF5B8DBE),
+      },
+      'campana': {
+        'label': 'Campaña',
+        'icon': Icons.campaign,
+        'color': const Color(0xFFB5976A),
+      },
+    };
+    final c = config[tipoPost] ?? config['campana']!;
+    final color = c['color'] as Color;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(c['icon'] as IconData, size: 12, color: color),
+              const SizedBox(width: 4),
+              Text(
+                c['label'] as String,
+                style: TextStyle(
+                    fontSize: 11, color: color, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDonacionPostDetails(Map<String, dynamic> post) {
+    final tipos = List<String>.from(post['tipos_ropa'] ?? []);
+    final cantidad = post['cantidad'] as String? ?? '';
+    final ciudad = post['ciudad'] as String? ?? '';
+    final fechaLimite = _formatPostDate(post['fecha_limite']);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (tipos.isNotEmpty) ...[
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            children: tipos
+                .map((t) => Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color:
+                            const Color(0xFF6B9E78).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(t,
+                          style: const TextStyle(
+                              fontSize: 11,
+                              color: Color(0xFF4A7A58),
+                              fontWeight: FontWeight.w500)),
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+        ],
+        Row(children: [
+          if (ciudad.isNotEmpty) ...[
+            const Icon(Icons.location_on_outlined,
+                size: 13, color: Color(0xFFB5976A)),
+            const SizedBox(width: 3),
+            Text(ciudad,
+                style:
+                    const TextStyle(fontSize: 12, color: Color(0xFF9A8A75))),
+          ],
+          if (ciudad.isNotEmpty && cantidad.isNotEmpty)
+            const Text('  •  ',
+                style:
+                    TextStyle(color: Color(0xFFD4C4A8), fontSize: 12)),
+          if (cantidad.isNotEmpty)
+            Text('$cantidad prendas',
+                style: const TextStyle(
+                    fontSize: 12, color: Color(0xFF9A8A75))),
+        ]),
+        if (fechaLimite.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Row(children: [
+            const Icon(Icons.calendar_today_outlined,
+                size: 13, color: Color(0xFFB5976A)),
+            const SizedBox(width: 3),
+            Text('Límite: $fechaLimite',
+                style:
+                    const TextStyle(fontSize: 12, color: Color(0xFF9A8A75))),
+          ]),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildEventoPostDetails(Map<String, dynamic> post) {
+    final ciudad = post['ciudad'] as String? ?? '';
+    final direccion = post['direccion'] as String? ?? '';
+    final fechaEvento = _formatPostDate(post['fecha_evento']);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (ciudad.isNotEmpty || direccion.isNotEmpty) ...[
+          Row(children: [
+            const Icon(Icons.location_on_outlined,
+                size: 13, color: Color(0xFF5B8DBE)),
+            const SizedBox(width: 3),
+            Expanded(
+              child: Text(
+                [ciudad, direccion].where((s) => s.isNotEmpty).join(', '),
+                style: const TextStyle(
+                    fontSize: 12, color: Color(0xFF9A8A75)),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ]),
+          const SizedBox(height: 4),
+        ],
+        if (fechaEvento.isNotEmpty)
+          Row(children: [
+            const Icon(Icons.event, size: 13, color: Color(0xFF5B8DBE)),
+            const SizedBox(width: 3),
+            Text(fechaEvento,
+                style: const TextStyle(
+                    fontSize: 12, color: Color(0xFF9A8A75))),
+          ]),
+      ],
     );
   }
 

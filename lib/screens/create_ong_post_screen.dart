@@ -15,14 +15,16 @@ class CreateOngPostScreen extends StatefulWidget {
 
 class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
   final _tituloController = TextEditingController();
+  final _descripcionController = TextEditingController();
   final _ciudadController = TextEditingController();
   final _direccionController = TextEditingController();
-  final _descripcionController = TextEditingController();
 
   final List<File> _photos = [];
   final Set<String> _selectedTipos = {};
   String? _cantidad;
   DateTime? _fechaLimite;
+  DateTime? _fechaEvento;
+  String _tipoPost = 'donacion';
   bool _isLoading = false;
 
   final _firestoreService = FirestoreService();
@@ -43,12 +45,33 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
 
   final List<String> _cantidades = ['1-10', '10-20', '20-50', '50-100', '100+'];
 
+  final List<Map<String, dynamic>> _tiposPost = [
+    {
+      'id': 'donacion',
+      'label': 'Donación',
+      'icon': Icons.volunteer_activism,
+      'hint': 'Cuéntanos qué tipo de ropa necesitan y para quién...',
+    },
+    {
+      'id': 'evento',
+      'label': 'Evento',
+      'icon': Icons.event,
+      'hint': 'Describe el evento y cómo pueden participar...',
+    },
+    {
+      'id': 'campana',
+      'label': 'Campaña',
+      'icon': Icons.campaign,
+      'hint': 'Comparte los detalles de tu campaña...',
+    },
+  ];
+
   @override
   void dispose() {
     _tituloController.dispose();
+    _descripcionController.dispose();
     _ciudadController.dispose();
     _direccionController.dispose();
-    _descripcionController.dispose();
     super.dispose();
   }
 
@@ -61,26 +84,42 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
     if (picked != null) setState(() => _photos.add(File(picked.path)));
   }
 
-  Future<void> _pickDate() async {
+  Future<void> _pickFechaLimite() async {
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
       initialDate: now.add(const Duration(days: 7)),
       firstDate: now,
       lastDate: now.add(const Duration(days: 365)),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xFFB5976A),
-            onPrimary: Colors.white,
-            surface: Colors.white,
-            onSurface: Color(0xFF4A3F30),
-          ),
-        ),
-        child: child!,
-      ),
+      builder: (context, child) => _datePickerTheme(context, child!),
     );
     if (picked != null) setState(() => _fechaLimite = picked);
+  }
+
+  Future<void> _pickFechaEvento() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: now.add(const Duration(days: 1)),
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 365)),
+      builder: (context, child) => _datePickerTheme(context, child!),
+    );
+    if (picked != null) setState(() => _fechaEvento = picked);
+  }
+
+  Widget _datePickerTheme(BuildContext context, Widget child) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFFB5976A),
+          onPrimary: Colors.white,
+          surface: Colors.white,
+          onSurface: Color(0xFF4A3F30),
+        ),
+      ),
+      child: child,
+    );
   }
 
   Future<void> _submit() async {
@@ -88,8 +127,12 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
       _showError('Ingresa un título para la publicación');
       return;
     }
-    if (_selectedTipos.isEmpty) {
-      _showError('Selecciona al menos un tipo de ropa');
+    if (_descripcionController.text.trim().isEmpty) {
+      _showError('Ingresa una descripción');
+      return;
+    }
+    if (_tipoPost == 'donacion' && _selectedTipos.isEmpty) {
+      _showError('Selecciona al menos un tipo de ropa que necesitan');
       return;
     }
 
@@ -109,22 +152,34 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
           .get();
       final ongData = ongDoc.data() ?? {};
 
-      await _firestoreService.createOngPost({
+      final Map<String, dynamic> postData = {
+        'tipo_post': _tipoPost,
         'titulo': _tituloController.text.trim(),
-        'tipos_ropa': _selectedTipos.toList(),
-        'cantidad': _cantidad ?? '',
-        'ciudad': _ciudadController.text.trim(),
-        'direccion': _direccionController.text.trim(),
-        'fecha_limite': _fechaLimite != null
-            ? Timestamp.fromDate(_fechaLimite!)
-            : null,
         'descripcion': _descripcionController.text.trim(),
         'fotos': photoUrls,
         'ong_nombre': ongData['nombre_fundacion'] ?? '',
         'ong_logo': ongData['logo_url'] ?? '',
-      });
+      };
 
-      if (mounted) Navigator.pushReplacementNamed(context, '/home');
+      if (_tipoPost == 'donacion') {
+        postData['tipos_ropa'] = _selectedTipos.toList();
+        postData['cantidad'] = _cantidad ?? '';
+        postData['ciudad'] = _ciudadController.text.trim();
+        postData['direccion'] = _direccionController.text.trim();
+        if (_fechaLimite != null) {
+          postData['fecha_limite'] = Timestamp.fromDate(_fechaLimite!);
+        }
+      } else if (_tipoPost == 'evento') {
+        postData['ciudad'] = _ciudadController.text.trim();
+        postData['direccion'] = _direccionController.text.trim();
+        if (_fechaEvento != null) {
+          postData['fecha_evento'] = Timestamp.fromDate(_fechaEvento!);
+        }
+      }
+
+      await _firestoreService.createOngPost(postData);
+
+      if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) _showError(e.toString().replaceFirst('Exception: ', ''));
     } finally {
@@ -140,6 +195,7 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTipo = _tiposPost.firstWhere((t) => t['id'] == _tipoPost);
     return Scaffold(
       backgroundColor: const Color(0xFFF5EFE6),
       appBar: AppBar(
@@ -154,47 +210,141 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
           ),
         ),
         iconTheme: const IconThemeData(color: Color(0xFF4A3F30)),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: TextButton(
+              onPressed: _isLoading ? null : _submit,
+              style: TextButton.styleFrom(
+                backgroundColor: const Color(0xFFB5976A),
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+              ),
+              child: _isLoading
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                          color: Colors.white, strokeWidth: 2),
+                    )
+                  : const Text('Publicar',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _buildTipoSelector(),
+            const SizedBox(height: 20),
             _buildPhotoSection(),
             const SizedBox(height: 20),
             _buildLabel('Título *'),
             const SizedBox(height: 6),
-            _buildTextField(_tituloController, 'Ej. Donación de ropa de invierno'),
+            _buildTextField(
+              _tituloController,
+              'Ej. ${_tipoPost == 'donacion' ? 'Necesitamos ropa de invierno para familias' : _tipoPost == 'evento' ? 'Feria de ropa solidaria' : 'Campaña de reciclaje textil'}',
+            ),
             const SizedBox(height: 16),
-            _buildLabel('Tipos de ropa *'),
+            _buildLabel('Descripción *'),
+            const SizedBox(height: 6),
+            _buildDescriptionField(currentTipo['hint'] as String),
+            const SizedBox(height: 16),
+            if (_tipoPost == 'donacion') ..._buildDonacionFields(),
+            if (_tipoPost == 'evento') ..._buildEventoFields(),
             const SizedBox(height: 8),
-            _buildTiposChips(),
-            const SizedBox(height: 16),
-            _buildLabel('Cantidad de prendas'),
-            const SizedBox(height: 6),
-            _buildCantidadDropdown(),
-            const SizedBox(height: 16),
-            _buildLabel('Ciudad'),
-            const SizedBox(height: 6),
-            _buildTextField(_ciudadController, 'Ej. Bogotá'),
-            const SizedBox(height: 16),
-            _buildLabel('Dirección de entrega'),
-            const SizedBox(height: 6),
-            _buildTextField(_direccionController, 'Carrera 7 # 43-12, piso 3'),
-            const SizedBox(height: 16),
-            _buildLabel('Fecha límite de donación'),
-            const SizedBox(height: 6),
-            _buildDateButton(),
-            const SizedBox(height: 16),
-            _buildLabel('Descripción'),
-            const SizedBox(height: 6),
-            _buildDescriptionField(),
-            const SizedBox(height: 28),
-            _buildSubmitButton(),
-            const SizedBox(height: 16),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTipoSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Tipo de publicación',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF9A8A75),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: _tiposPost.map((tipo) {
+            final isSelected = _tipoPost == tipo['id'];
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => setState(() {
+                  _tipoPost = tipo['id'] as String;
+                  _selectedTipos.clear();
+                  _cantidad = null;
+                  _fechaLimite = null;
+                  _fechaEvento = null;
+                }),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  margin: EdgeInsets.only(
+                    right: tipo['id'] != 'campana' ? 8 : 0,
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? const Color(0xFFB5976A)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFFB5976A)
+                          : const Color(0xFFE0D0BC),
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color:
+                                  const Color(0xFFB5976A).withValues(alpha: 0.25),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            )
+                          ]
+                        : [],
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        tipo['icon'] as IconData,
+                        size: 22,
+                        color: isSelected
+                            ? Colors.white
+                            : const Color(0xFFB5976A),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        tipo['label'] as String,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color:
+                              isSelected ? Colors.white : const Color(0xFF4A3F30),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
@@ -202,15 +352,32 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel('Fotos (máx. 3)'),
+        Row(
+          children: [
+            const Text(
+              'Imágenes',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF4A3F30),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '(opcional, máx. 3)',
+              style: TextStyle(
+                  fontSize: 12,
+                  color: const Color(0xFF9A8A75).withValues(alpha: 0.8)),
+            ),
+          ],
+        ),
         const SizedBox(height: 8),
         SizedBox(
           height: 100,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              ..._photos.asMap().entries.map(
-                  (e) => _buildPhotoThumb(e.key, e.value)),
+              ..._photos.asMap().entries.map((e) => _buildPhotoThumb(e.key, e.value)),
               if (_photos.length < 3) _buildAddPhotoButton(),
             ],
           ),
@@ -279,6 +446,56 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
     );
   }
 
+  List<Widget> _buildDonacionFields() {
+    return [
+      _buildLabel('¿Qué tipo de ropa necesitan? *'),
+      const SizedBox(height: 8),
+      _buildTiposChips(),
+      const SizedBox(height: 16),
+      _buildLabel('Cantidad de prendas'),
+      const SizedBox(height: 6),
+      _buildCantidadDropdown(),
+      const SizedBox(height: 16),
+      _buildLabel('Ciudad de entrega'),
+      const SizedBox(height: 6),
+      _buildTextField(_ciudadController, 'Ej. Bogotá'),
+      const SizedBox(height: 16),
+      _buildLabel('Dirección de entrega'),
+      const SizedBox(height: 6),
+      _buildTextField(_direccionController, 'Ej. Carrera 7 # 43-12, piso 3'),
+      const SizedBox(height: 16),
+      _buildLabel('Fecha límite de donación'),
+      const SizedBox(height: 6),
+      _buildDateButton(
+        date: _fechaLimite,
+        hint: 'Seleccionar fecha límite',
+        onTap: _pickFechaLimite,
+      ),
+      const SizedBox(height: 16),
+    ];
+  }
+
+  List<Widget> _buildEventoFields() {
+    return [
+      _buildLabel('Ciudad'),
+      const SizedBox(height: 6),
+      _buildTextField(_ciudadController, 'Ej. Medellín'),
+      const SizedBox(height: 16),
+      _buildLabel('Lugar o dirección'),
+      const SizedBox(height: 6),
+      _buildTextField(_direccionController, 'Ej. Parque El Poblado'),
+      const SizedBox(height: 16),
+      _buildLabel('Fecha del evento'),
+      const SizedBox(height: 6),
+      _buildDateButton(
+        date: _fechaEvento,
+        hint: 'Seleccionar fecha del evento',
+        onTap: _pickFechaEvento,
+      ),
+      const SizedBox(height: 16),
+    ];
+  }
+
   Widget _buildTiposChips() {
     return Wrap(
       spacing: 8,
@@ -295,11 +512,9 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
           }),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color:
-                  isSelected ? const Color(0xFFB5976A) : Colors.white,
+              color: isSelected ? const Color(0xFFB5976A) : Colors.white,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isSelected
@@ -311,12 +526,9 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
               tipo,
               style: TextStyle(
                 fontSize: 13,
-                color: isSelected
-                    ? Colors.white
-                    : const Color(0xFF4A3F30),
-                fontWeight: isSelected
-                    ? FontWeight.w600
-                    : FontWeight.normal,
+                color: isSelected ? Colors.white : const Color(0xFF4A3F30),
+                fontWeight:
+                    isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ),
@@ -331,8 +543,8 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-            color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
+        border:
+            Border.all(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
       ),
       child: DropdownButton<String>(
         value: _cantidad,
@@ -349,17 +561,20 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
     );
   }
 
-  Widget _buildDateButton() {
+  Widget _buildDateButton({
+    required DateTime? date,
+    required String hint,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
-      onTap: _pickDate,
+      onTap: onTap,
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-              color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
+          border:
+              Border.all(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
@@ -367,11 +582,11 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
                 color: Color(0xFFB5976A), size: 18),
             const SizedBox(width: 10),
             Text(
-              _fechaLimite != null
-                  ? '${_fechaLimite!.day}/${_fechaLimite!.month}/${_fechaLimite!.year}'
-                  : 'Seleccionar fecha',
+              date != null
+                  ? '${date.day}/${date.month}/${date.year}'
+                  : hint,
               style: TextStyle(
-                color: _fechaLimite != null
+                color: date != null
                     ? const Color(0xFF4A3F30)
                     : const Color(0xFFB0A090),
                 fontSize: 14,
@@ -383,64 +598,32 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
     );
   }
 
-  Widget _buildDescriptionField() {
+  Widget _buildDescriptionField(String hint) {
     return TextField(
       controller: _descripcionController,
-      maxLines: 4,
-      style: const TextStyle(color: Color(0xFF4A3F30)),
+      maxLines: 5,
+      style: const TextStyle(color: Color(0xFF4A3F30), fontSize: 15),
       decoration: InputDecoration(
-        hintText:
-            'Describe qué tipo de ropa necesitan, condiciones, etc.',
-        hintStyle:
-            const TextStyle(color: Color(0xFFB0A090), fontSize: 13),
+        hintText: hint,
+        hintStyle: const TextStyle(color: Color(0xFFB0A090), fontSize: 14),
         filled: true,
         fillColor: Colors.white,
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-              color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
+          borderSide:
+              BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-              color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
+          borderSide:
+              BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              const BorderSide(color: Color(0xFFB5976A), width: 1.5),
+          borderSide: const BorderSide(color: Color(0xFFB5976A), width: 1.5),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSubmitButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 52,
-      child: ElevatedButton(
-        onPressed: _isLoading ? null : _submit,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFB5976A),
-          disabledBackgroundColor:
-              const Color(0xFFB5976A).withValues(alpha: 0.4),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14)),
-        ),
-        child: _isLoading
-            ? const SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(
-                    color: Colors.white, strokeWidth: 2.5),
-              )
-            : const Text('Publicar',
-                style: TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w600)),
       ),
     );
   }
@@ -462,26 +645,24 @@ class _CreateOngPostScreenState extends State<CreateOngPostScreen> {
       style: const TextStyle(color: Color(0xFF4A3F30)),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle:
-            const TextStyle(color: Color(0xFFB0A090), fontSize: 14),
+        hintStyle: const TextStyle(color: Color(0xFFB0A090), fontSize: 14),
         filled: true,
         fillColor: Colors.white,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-              color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
+          borderSide:
+              BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-              color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
+          borderSide:
+              BorderSide(color: const Color(0xFFB5976A).withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              const BorderSide(color: Color(0xFFB5976A), width: 1.5),
+          borderSide: const BorderSide(color: Color(0xFFB5976A), width: 1.5),
         ),
       ),
     );
