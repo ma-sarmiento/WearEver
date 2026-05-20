@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/bottom_nav.dart';
 import '../services/firestore_service.dart';
-import '../services/gemini_service.dart';
+import '../services/ai_service.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -15,7 +15,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _msgController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final _firestoreService = FirestoreService();
-  final _geminiService = GeminiService();
+  final _aiService = AiService();
   final _currentUid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   String? _otherUid;
@@ -109,7 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
       });
       _scrollToBottom();
 
-      final response = await _geminiService.chat(text);
+      final response = await _aiService.chat(text);
 
       if (mounted) {
         setState(() {
