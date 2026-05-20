@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/notification_service.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
@@ -39,8 +38,6 @@ import 'screens/notifications_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
-  debugPrint('OpenAI key loaded: ${dotenv.env['OPENAI_API_KEY']?.substring(0, 10)}...');
   await Firebase.initializeApp();
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
