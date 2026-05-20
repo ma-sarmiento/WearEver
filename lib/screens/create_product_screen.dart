@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/storage_service.dart';
+import '../services/gemini_service.dart';
 
 class CreateProductScreen extends StatefulWidget {
   /// Si se pasa un producto existente, la pantalla funciona en modo edición.
@@ -72,8 +74,175 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       maxWidth: 1080,
     );
     if (picked != null && mounted) {
-      setState(() => _newPhotos.add(File(picked.path)));
+      final file = File(picked.path);
+      setState(() => _newPhotos.add(file));
+      _scanAndShowResult(file);
     }
+  }
+
+  Future<void> _scanAndShowResult(File file) async {
+    try {
+      final bytes = await file.readAsBytes();
+      final base64Image = base64Encode(bytes);
+      final result = await GeminiService().scanPrenda(base64Image);
+      if (mounted) _showScanResultSheet(result);
+    } catch (_) {
+      // scan falla silenciosamente, el usuario puede publicar igual
+    }
+  }
+
+  void _showScanResultSheet(Map<String, dynamic> result) {
+    final grado = result['grado'] as String? ?? 'B';
+    final descripcion = result['descripcion'] as String? ?? '';
+    final recomendacion = result['recomendacion'] as String? ?? 'Donar';
+    final puntaje = (result['puntaje'] as num?)?.toInt() ?? 50;
+
+    final Color gradeColor;
+    final String gradeEmoji;
+    final String gradeMessage;
+
+    switch (grado) {
+      case 'A':
+        gradeColor = const Color(0xFF2E7D32);
+        gradeEmoji = '🟢';
+        gradeMessage = '¡Perfecta para vender!';
+        break;
+      case 'C':
+        gradeColor = const Color(0xFFD32F2F);
+        gradeEmoji = '🔴';
+        gradeMessage = 'Llévala a un punto de reciclaje';
+        break;
+      default:
+        gradeColor = const Color(0xFFF57F17);
+        gradeEmoji = '🟡';
+        gradeMessage = 'Te recomendamos donarla a una ONG';
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40, height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE0D0BC),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Text(gradeEmoji, style: const TextStyle(fontSize: 28)),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Grado $grado — $recomendacion',
+                        style: TextStyle(
+                          color: gradeColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        'Puntaje: $puntaje / 100',
+                        style: const TextStyle(
+                            color: Color(0xFF9A8A75), fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                descripcion,
+                style: const TextStyle(
+                    color: Color(0xFF4A3F30), fontSize: 13, height: 1.4),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: gradeColor.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: gradeColor.withValues(alpha: 0.3)),
+                ),
+                child: Text(
+                  gradeMessage,
+                  style: TextStyle(
+                    color: gradeColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              if (grado == 'B') ...[
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      Navigator.pushNamed(context, '/ong');
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color(0xFFF57F17)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: const Text('Ver ONGs',
+                        style: TextStyle(color: Color(0xFFF57F17))),
+                  ),
+                ),
+              ],
+              if (grado == 'C') ...[
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      Navigator.pushNamed(context, '/map');
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color(0xFFD32F2F)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: const Text('Ver mapa',
+                        style: TextStyle(color: Color(0xFFD32F2F))),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('Continuar publicando',
+                      style: TextStyle(color: Color(0xFF9A8A75))),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _save() async {
